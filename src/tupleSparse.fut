@@ -1,4 +1,6 @@
-type a
+import "lib/github.com/diku-dk/sorts/merge_sort"
+import "lib/github.com/diku-dk/segmented"
+
 type matrix a = {(Inds : [](i32,i32)), (Vals : []a), (Dims : (i32,i32))}
 
 --General solution
@@ -24,7 +26,7 @@ let empty (dim : (i32,i32)) : matrix a= {Inds = [], Vals=[], Dims=dim}
 
 
 let diag (size :i32) (el : a) : matrix a =
-  let (inds, vals) = unzip < map (\i -> ((i,i),el)) (iota size)
+  let (inds, vals) = unzip <| map (\i -> ((i,i),el)) (iota size)
   in {Inds = inds, Vals = vals, Dims= (size,size)}
 
 
@@ -58,6 +60,14 @@ let sparseFlatten 'a (mat : matrix a) : []((i32,i32),a) =
 let sparseMap 'a 'b (mat : matrix a) (fun : a -> b) : matrix b =
   {Inds = mat.Inds, Vals= map fun mat.Vals, Dims=mat.Dims}
 
-let add 'a (mat0 : matrix a) (mat1 : matrix a) =
+let elementwise 'a (mat0 : matrix a) (mat1 : matrix a) (fun : a -> a -> b) (ne : a) =
+  if mat0.Dims == mat1.Dims
+  then let mat = (zip mat0.Inds mat0.Vals) ++ (zip mat1.Inds mat1.Vals)
+       let sort = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if i0==i1 then j0<=j1 else i0 <= i1) mat
+       let flags = map2 (\(ind0,_) (ind1,_) -> ind0!=ind1) sort (rotate (-1) sort)
+       let (inds,vals) = unzip segmented_reduce (\(_,v0) (i1,v1) -> (i1,fun v0 v1)) ((0,0),ne) flags sort
+       in {Inds = inds, Vals = vals, Dims = mat0.Dims}
+  else ERROR
 
-let mul 'a (mat0 : matrix a) (mat1 : matrix a) =
+let mul 'a (mat0 : matrix a) (mat1 : matrix a) (ne : a) =
+  
