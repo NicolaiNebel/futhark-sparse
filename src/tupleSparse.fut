@@ -3,6 +3,7 @@ import "lib/github.com/diku-dk/segmented/segmented"
 import "futlib/math"
 
 module coord = {
+  --type mul = i8,i16,i32,i64,u8,u16,u32,u64,f32,f64
   type matrix 'a = { Inds : [](i32,i32), Vals : []a, Dims : (i32,i32) }
 
 let fromList 'a (dim : (i32,i32)) (l : []((i32,i32),a)) : matrix a =
@@ -63,7 +64,7 @@ let sparseFlatten 'a (mat : matrix a) : []((i32,i32),a) =
 let sparseMap 'a 'b (mat : matrix a) (fun : a -> b) : matrix b =
   {Inds = mat.Inds, Vals= map fun mat.Vals, Dims=mat.Dims}
 
-let elementwise 'a 'b (mat0 : matrix a) (mat1 : matrix a) (fun : a -> a -> a) (ne : a) : matrix a =
+let elementwise 'a (mat0 : matrix a) (mat1 : matrix a) (fun : a -> a -> a) (ne : a) : matrix a =
   if mat0.Dims == mat1.Dims
   then let mat = (zip mat0.Inds mat0.Vals) ++ (zip mat1.Inds mat1.Vals)
        let sort = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if i0==i1 then j0<=j1 else i0 <= i1) mat
@@ -77,10 +78,11 @@ let elementwise 'a 'b (mat0 : matrix a) (mat1 : matrix a) (fun : a -> a -> a) (n
 --   let part0 = sort0[count0[i]:count0[i+1]]
 --   let part1 = sort1[count1[j]:count1[j+1]]
 --   let js = map (\(ind,_) -> ind.2) part1
---   in map (\((i,_),v) -> let ind = find_idx_first i (==) js
+--   let res = map (\((i,_),v) -> let ind = find_idx_first i (==) js
 --                         in if ind == -1 then ne
 --                            else v * (unsafe( part1[ind] ).2)
---          ) part0
+--                 ) part0
+--   in reduce (+) ne res
 
 -- let mul (mat0 : matrix mul) (mat1 : matrix mul) (ne : mul) : matrix mul =
 --   if mat0.Dims.2 == mat1.Dims.1
