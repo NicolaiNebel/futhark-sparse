@@ -74,26 +74,28 @@ let elementwise 'a (mat0 : matrix a) (mat1 : matrix a) (fun : a -> a -> a) (ne :
   else mat0
 
 
--- let matMult (sort0 : []((i32,i32),mul)) count0 (sort1 : []((i32,i32),mul)) count1 ne i j =
---   let part0 = sort0[count0[i]:count0[i+1]]
---   let part1 = sort1[count1[j]:count1[j+1]]
---   let js = map (\(ind,_) -> ind.2) part1
---   let res = map (\((i,_),v) -> let ind = find_idx_first i (==) js
---                         in if ind == -1 then ne
---                            else v * (unsafe( part1[ind] ).2)
---                 ) part0
---   in reduce (+) ne res
+let matMult 'a (sort0 : []((i32,i32),a)) count0 (sort1 : []((i32,i32),a)) count1 (ne : a) (mul : a->a->a) (plus : a->a->a) i j =
+  let part0 = sort0[count0[i]:count0[i+1]]
+  let part1 = sort1[count1[j]:count1[j+1]]
+  let is = map (\(ind,_) -> ind.1) part1
+  let res = map (\((_,j),v) -> let ind = find_idx_first j (==) is
+                               in if ind == -1 then ne
+                                  else mul v (unsafe( part1[ind] ).2)
+                ) part0
+  in ((i,j),reduce plus ne res)
 
--- let mul (mat0 : matrix mul) (mat1 : matrix mul) (ne : mul) : matrix mul =
---   if mat0.Dims.2 == mat1.Dims.1
---   then let sort0 = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if i0==i1 then j0<=j1 else i0 <= i1) (zip mat0.Inds, mat0.Vals)
---        let sort1 = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if j0==j1 then i0<=i1 else j0 <= j1) (zip mat1.Inds mat1.Vals)
---        let flag0 = map2 (\((ind0,_),_) ((ind1,_),_) -> ind0!=ind1) sort0 (rotate (-1) sort0)
---        let count0 = (++) [0] <| segmented_reduce (\i _-> i+1) 0 flag0 flag0
---        let flag1 = map2 (\((_ind0),_) ((_,ind1),_) -> ind0!=ind1) sort1 (rotate (-1) sort1)
---        let count1 =(++)  [0] <| segmented_reduce (\i _-> i+1) 0 flag1 flag1
---        let dense = expand (\i -> mat1.Dims.2) (matMult sort0 count0 sort1 count1 ne) (iota mat0.Dims.1)
---        let (inds,vals) =unzip <| filter (\(_,v) -> v!=ne) res
---        in {Inds = inds, Vals = vals, Dims = (mat0.Dims.1,mat1.Dims.2)}
---   else ERROR
+let mul 'a (mat0 : matrix a) (mat1 : matrix a) (ne : a) (mul : a -> a -> a) (plus : a->a->a) (eq : a->a->bool) : matrix a =
+  if mat0.Dims.2 == mat1.Dims.1
+  then let sort0 = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if i0==i1 then j0<=j1 else i0 <= i1) (zip mat0.Inds mat0.Vals)
+       let sort1 = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if j0==j1 then i0<=i1 else j0 <= j1) (zip mat1.Inds mat1.Vals)
+       let flag0 = map2 (\((ind0,_),_) ((ind1,_),_) -> ind0!=ind1) sort0 (rotate (-1) sort0)
+       let flag0i = map (\b -> if b then 1 else 0) flag0
+       let count0 = (++) [0] <| segmented_reduce (\i _-> i+1) 0 flag0 flag0i
+       let flag1 = map2 (\((_,ind0),_) ((_,ind1),_) -> ind0!=ind1) sort1 (rotate (-1) sort1)
+       let flag1i = map (\b -> if b then 1 else 0) flag1
+       let count1 =(++)  [0] <| segmented_reduce (\i _-> i+1) 0 flag1 flag1i
+       let dense = expand (\_ -> mat1.Dims.2) (matMult sort0 count0 sort1 count1 ne mul plus) (iota mat0.Dims.1)
+       let (inds,vals) =unzip <| filter (\(_,v) -> ! (eq v ne)) dense
+       in {Inds = inds, Vals = vals, Dims = (mat0.Dims.1,mat1.Dims.2)}
+  else mat0
 }
