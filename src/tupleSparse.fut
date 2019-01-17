@@ -8,7 +8,7 @@ module type MonoidEq = {
   val zero: t
 }
 
-module spCoord(M: MonoidEq = {
+module coord = {
   --type mul = i8,i16,i32,i64,u8,u16,u32,u64,f32,f64
   type matrix 'a = { Inds : [](i32,i32), Vals : []a, Dims : (i32,i32) }
 
