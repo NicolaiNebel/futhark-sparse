@@ -989,7 +989,7 @@ static void futrts_cli_entry_main(struct futhark_context *ctx)
 {
     int64_t t_start, t_end;
     int time_runs;
-    bool result_11609;
+    bool result_14249;
     
     if (perform_warmup) {
         time_runs = 0;
@@ -998,7 +998,7 @@ static void futrts_cli_entry_main(struct futhark_context *ctx)
         
         assert(futhark_context_sync(ctx) == 0);
         t_start = get_wall_time();
-        r = futhark_entry_main(ctx, &result_11609);
+        r = futhark_entry_main(ctx, &result_14249);
         if (r != 0)
             panic(1, "%s", futhark_context_get_error(ctx));
         assert(futhark_context_sync(ctx) == 0);
@@ -1017,7 +1017,7 @@ static void futrts_cli_entry_main(struct futhark_context *ctx)
         
         assert(futhark_context_sync(ctx) == 0);
         t_start = get_wall_time();
-        r = futhark_entry_main(ctx, &result_11609);
+        r = futhark_entry_main(ctx, &result_14249);
         if (r != 0)
             panic(1, "%s", futhark_context_get_error(ctx));
         assert(futhark_context_sync(ctx) == 0);
@@ -1031,7 +1031,7 @@ static void futrts_cli_entry_main(struct futhark_context *ctx)
             ;
         }
     }
-    write_scalar(stdout, binary_output, &bool_info, &result_11609);
+    write_scalar(stdout, binary_output, &bool_info, &result_14249);
     printf("\n");
     ;
 }
@@ -1152,9 +1152,15 @@ static void free_lock(lock_t *lock) {
 
 #endif
 
-static int32_t static_array_realtype_11606[4] = {1, 2, 3, 4};
-static int32_t static_array_realtype_11607[4] = {0, 1, 1, 0};
-static int32_t static_array_realtype_11608[4] = {1, 0, 1, 0};
+static int32_t static_array_realtype_14240[4] = {1, 2, 3, 4};
+static int32_t static_array_realtype_14241[4] = {0, 0, 1, 1};
+static int32_t static_array_realtype_14242[4] = {0, 1, 0, 1};
+static int32_t static_array_realtype_14243[3] = {0, 1, 1};
+static int32_t static_array_realtype_14244[3] = {1, 0, 1};
+static int32_t static_array_realtype_14245[3] = {1, 2, 3};
+static int32_t static_array_realtype_14246[3] = {1, 4, 3};
+static int32_t static_array_realtype_14247[4] = {0, 1, 1, 0};
+static int32_t static_array_realtype_14248[4] = {1, 0, 1, 0};
 struct memblock {
     int *references;
     char *mem;
@@ -1197,9 +1203,15 @@ struct futhark_context {
     char *error;
     int64_t peak_mem_usage_default;
     int64_t cur_mem_usage_default;
-    struct memblock static_array_11599;
-    struct memblock static_array_11601;
-    struct memblock static_array_11602;
+    struct memblock static_array_14145;
+    struct memblock static_array_14153;
+    struct memblock static_array_14154;
+    struct memblock static_array_14158;
+    struct memblock static_array_14159;
+    struct memblock static_array_14160;
+    struct memblock static_array_14183;
+    struct memblock static_array_14202;
+    struct memblock static_array_14203;
 } ;
 struct futhark_context *futhark_context_new(struct futhark_context_config *cfg)
 {
@@ -1213,14 +1225,32 @@ struct futhark_context *futhark_context_new(struct futhark_context_config *cfg)
     create_lock(&ctx->lock);
     ctx->peak_mem_usage_default = 0;
     ctx->cur_mem_usage_default = 0;
-    ctx->static_array_11599 = (struct memblock) {NULL,
-                                                 (char *) static_array_realtype_11606,
+    ctx->static_array_14145 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14240,
                                                  0};
-    ctx->static_array_11601 = (struct memblock) {NULL,
-                                                 (char *) static_array_realtype_11607,
+    ctx->static_array_14153 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14241,
                                                  0};
-    ctx->static_array_11602 = (struct memblock) {NULL,
-                                                 (char *) static_array_realtype_11608,
+    ctx->static_array_14154 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14242,
+                                                 0};
+    ctx->static_array_14158 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14243,
+                                                 0};
+    ctx->static_array_14159 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14244,
+                                                 0};
+    ctx->static_array_14160 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14245,
+                                                 0};
+    ctx->static_array_14183 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14246,
+                                                 0};
+    ctx->static_array_14202 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14247,
+                                                 0};
+    ctx->static_array_14203 = (struct memblock) {NULL,
+                                                 (char *) static_array_realtype_14248,
                                                  0};
     return ctx;
 }
@@ -1304,7 +1334,7 @@ void futhark_debugging_report(struct futhark_context *ctx)
     }
     if (ctx->debugging) { }
 }
-static int futrts_main(struct futhark_context *ctx, bool *out_scalar_out_11605);
+static int futrts_main(struct futhark_context *ctx, bool *out_scalar_out_14239);
 static inline int8_t add8(int8_t x, int8_t y)
 {
     return x + y;
@@ -2245,503 +2275,2228 @@ static inline double futrts_from_bits64(int64_t x)
     p.f = x;
     return p.t;
 }
-static int futrts_main(struct futhark_context *ctx, bool *out_scalar_out_11605)
+static int futrts_main(struct futhark_context *ctx, bool *out_scalar_out_14239)
 {
-    bool scalar_out_11584;
-    struct memblock mem_11492;
+    bool scalar_out_14144;
+    struct memblock mem_13689;
     
-    mem_11492.references = NULL;
-    memblock_alloc(ctx, &mem_11492, 16, "mem_11492");
+    mem_13689.references = NULL;
+    memblock_alloc(ctx, &mem_13689, 16, "mem_13689");
     
-    struct memblock mem_11497;
+    struct memblock static_array_14145 = ctx->static_array_14145;
     
-    mem_11497.references = NULL;
-    memblock_alloc(ctx, &mem_11497, 8, "mem_11497");
-    for (int32_t i_11419 = 0; i_11419 < 2; i_11419++) {
-        for (int32_t i_11586 = 0; i_11586 < 2; i_11586++) {
-            *(int32_t *) &mem_11497.mem[i_11586 * 4] = i_11419;
+    memmove(mem_13689.mem + 0, static_array_14145.mem + 0, 4 * sizeof(int32_t));
+    
+    struct memblock mem_13692;
+    
+    mem_13692.references = NULL;
+    memblock_alloc(ctx, &mem_13692, 16, "mem_13692");
+    
+    struct memblock mem_13697;
+    
+    mem_13697.references = NULL;
+    memblock_alloc(ctx, &mem_13697, 8, "mem_13697");
+    for (int32_t i_13218 = 0; i_13218 < 2; i_13218++) {
+        for (int32_t i_14147 = 0; i_14147 < 2; i_14147++) {
+            *(int32_t *) &mem_13697.mem[i_14147 * 4] = i_13218;
         }
-        memmove(mem_11492.mem + 2 * i_11419 * 4, mem_11497.mem + 0, 2 *
+        memmove(mem_13692.mem + 2 * i_13218 * 4, mem_13697.mem + 0, 2 *
                 sizeof(int32_t));
     }
-    memblock_unref(ctx, &mem_11497, "mem_11497");
+    memblock_unref(ctx, &mem_13697, "mem_13697");
     
-    struct memblock mem_11502;
+    struct memblock mem_13702;
     
-    mem_11502.references = NULL;
-    memblock_alloc(ctx, &mem_11502, 16, "mem_11502");
+    mem_13702.references = NULL;
+    memblock_alloc(ctx, &mem_13702, 16, "mem_13702");
     
-    struct memblock mem_11505;
+    int32_t discard_13225;
+    int32_t scanacc_13221 = 0;
     
-    mem_11505.references = NULL;
-    memblock_alloc(ctx, &mem_11505, 16, "mem_11505");
-    
-    int32_t discard_11429;
-    int32_t scanacc_11423 = 0;
-    
-    for (int32_t i_11426 = 0; i_11426 < 4; i_11426++) {
-        bool not_arg_11305 = i_11426 == 0;
-        bool res_11306 = !not_arg_11305;
-        int32_t part_res_11307;
+    for (int32_t i_13223 = 0; i_13223 < 4; i_13223++) {
+        int32_t zz_12645 = 1 + scanacc_13221;
         
-        if (res_11306) {
-            part_res_11307 = 0;
-        } else {
-            part_res_11307 = 1;
-        }
+        *(int32_t *) &mem_13702.mem[i_13223 * 4] = zz_12645;
         
-        int32_t part_res_11308;
+        int32_t scanacc_tmp_14148 = zz_12645;
         
-        if (res_11306) {
-            part_res_11308 = 1;
-        } else {
-            part_res_11308 = 0;
-        }
-        
-        int32_t zz_11303 = part_res_11308 + scanacc_11423;
-        
-        *(int32_t *) &mem_11502.mem[i_11426 * 4] = zz_11303;
-        *(int32_t *) &mem_11505.mem[i_11426 * 4] = part_res_11307;
-        
-        int32_t scanacc_tmp_11587 = zz_11303;
-        
-        scanacc_11423 = scanacc_tmp_11587;
+        scanacc_13221 = scanacc_tmp_14148;
     }
-    discard_11429 = scanacc_11423;
+    discard_13225 = scanacc_13221;
     
-    int32_t last_offset_11309 = *(int32_t *) &mem_11502.mem[12];
-    int64_t binop_x_11515 = sext_i32_i64(last_offset_11309);
-    int64_t bytes_11514 = 4 * binop_x_11515;
-    struct memblock mem_11516;
+    int32_t last_offset_12647 = *(int32_t *) &mem_13702.mem[12];
+    int64_t binop_x_13708 = sext_i32_i64(last_offset_12647);
+    int64_t bytes_13707 = 4 * binop_x_13708;
+    struct memblock mem_13709;
     
-    mem_11516.references = NULL;
-    memblock_alloc(ctx, &mem_11516, bytes_11514, "mem_11516");
+    mem_13709.references = NULL;
+    memblock_alloc(ctx, &mem_13709, bytes_13707, "mem_13709");
     
-    struct memblock mem_11519;
+    struct memblock mem_13712;
     
-    mem_11519.references = NULL;
-    memblock_alloc(ctx, &mem_11519, bytes_11514, "mem_11519");
+    mem_13712.references = NULL;
+    memblock_alloc(ctx, &mem_13712, bytes_13707, "mem_13712");
     
-    struct memblock mem_11522;
+    struct memblock mem_13715;
     
-    mem_11522.references = NULL;
-    memblock_alloc(ctx, &mem_11522, bytes_11514, "mem_11522");
-    for (int32_t write_iter_11430 = 0; write_iter_11430 < 4;
-         write_iter_11430++) {
-        int32_t write_iv_11434 = *(int32_t *) &mem_11505.mem[write_iter_11430 *
+    mem_13715.references = NULL;
+    memblock_alloc(ctx, &mem_13715, bytes_13707, "mem_13715");
+    for (int32_t write_iter_13226 = 0; write_iter_13226 < 4;
+         write_iter_13226++) {
+        int32_t write_iv_13230 = *(int32_t *) &mem_13702.mem[write_iter_13226 *
                                                              4];
-        int32_t write_iv_11435 = *(int32_t *) &mem_11502.mem[write_iter_11430 *
-                                                             4];
-        int32_t new_index_11475 = squot32(write_iter_11430, 2);
-        int32_t binop_y_11477 = 2 * new_index_11475;
-        int32_t new_index_11478 = write_iter_11430 - binop_y_11477;
-        int32_t write_iv_11436 = *(int32_t *) &mem_11492.mem[(new_index_11475 *
+        int32_t new_index_13567 = squot32(write_iter_13226, 2);
+        int32_t binop_y_13569 = 2 * new_index_13567;
+        int32_t new_index_13570 = write_iter_13226 - binop_y_13569;
+        int32_t write_iv_13231 = *(int32_t *) &mem_13692.mem[(new_index_13567 *
                                                               2 +
-                                                              new_index_11478) *
+                                                              new_index_13570) *
                                                              4];
-        bool is_this_one_11321 = write_iv_11434 == 0;
-        int32_t this_offset_11322 = -1 + write_iv_11435;
-        int32_t total_res_11323;
+        int32_t write_iv_13233 = *(int32_t *) &mem_13689.mem[write_iter_13226 *
+                                                             4];
+        int32_t this_offset_12658 = -1 + write_iv_13230;
+        bool less_than_zzero_13234 = slt32(this_offset_12658, 0);
+        bool greater_than_sizze_13235 = sle32(last_offset_12647,
+                                              this_offset_12658);
+        bool outside_bounds_dim_13236 = less_than_zzero_13234 ||
+             greater_than_sizze_13235;
         
-        if (is_this_one_11321) {
-            total_res_11323 = this_offset_11322;
-        } else {
-            total_res_11323 = -1;
+        if (!outside_bounds_dim_13236) {
+            *(int32_t *) &mem_13709.mem[this_offset_12658 * 4] = write_iv_13231;
         }
-        
-        bool less_than_zzero_11439 = slt32(total_res_11323, 0);
-        bool greater_than_sizze_11440 = sle32(last_offset_11309,
-                                              total_res_11323);
-        bool outside_bounds_dim_11441 = less_than_zzero_11439 ||
-             greater_than_sizze_11440;
-        
-        if (!outside_bounds_dim_11441) {
-            *(int32_t *) &mem_11516.mem[total_res_11323 * 4] = write_iv_11436;
+        if (!outside_bounds_dim_13236) {
+            *(int32_t *) &mem_13712.mem[this_offset_12658 * 4] =
+                new_index_13570;
         }
-        if (!outside_bounds_dim_11441) {
-            *(int32_t *) &mem_11519.mem[total_res_11323 * 4] = new_index_11478;
-        }
-        if (!outside_bounds_dim_11441) {
-            *(int32_t *) &mem_11522.mem[total_res_11323 * 4] = write_iter_11430;
+        if (!outside_bounds_dim_13236) {
+            *(int32_t *) &mem_13715.mem[this_offset_12658 * 4] = write_iv_13233;
         }
     }
-    memblock_unref(ctx, &mem_11492, "mem_11492");
-    memblock_unref(ctx, &mem_11502, "mem_11502");
-    memblock_unref(ctx, &mem_11505, "mem_11505");
+    memblock_unref(ctx, &mem_13692, "mem_13692");
+    memblock_unref(ctx, &mem_13702, "mem_13702");
     
-    int32_t x_11324 = abs(last_offset_11309);
-    bool empty_slice_11325 = x_11324 == 0;
-    int32_t m_11326 = x_11324 - 1;
-    bool zzero_leq_i_p_m_t_s_11327 = sle32(0, m_11326);
-    bool i_p_m_t_s_leq_w_11328 = slt32(m_11326, last_offset_11309);
-    bool y_11329 = zzero_leq_i_p_m_t_s_11327 && i_p_m_t_s_leq_w_11328;
-    bool ok_or_empty_11330 = empty_slice_11325 || y_11329;
-    bool index_certs_11331;
+    int32_t x_12659 = abs(last_offset_12647);
+    bool empty_slice_12660 = x_12659 == 0;
+    int32_t m_12661 = x_12659 - 1;
+    bool zzero_leq_i_p_m_t_s_12662 = sle32(0, m_12661);
+    bool i_p_m_t_s_leq_w_12663 = slt32(m_12661, last_offset_12647);
+    bool y_12664 = zzero_leq_i_p_m_t_s_12662 && i_p_m_t_s_leq_w_12663;
+    bool ok_or_empty_12665 = empty_slice_12660 || y_12664;
+    bool index_certs_12666;
     
-    if (!ok_or_empty_11330) {
+    if (!ok_or_empty_12665) {
         ctx->error = msgprintf("Error at %s:\n%s%s%s%d%s%d%s\n",
-                               "tupleTest.fut:46:1-48:10 -> tupleTest.fut:48:6-48:10 -> tupleTest.fut:42:13-42:36 -> tupleSparse.fut:17:18-17:57 -> /futlib/soacs.fut:135:6-135:16",
-                               "Index [", "", ":", last_offset_11309,
+                               "tupleTest.fut:75:1-77:24 -> tupleTest.fut:76:11-76:15 -> tupleTest.fut:15:13-15:29 -> tupleSparse.fut:23:18-23:61 -> /futlib/soacs.fut:135:6-135:16",
+                               "Index [", "", ":", last_offset_12647,
                                "] out of bounds for array of shape [",
-                               last_offset_11309, "].");
-        memblock_unref(ctx, &mem_11522, "mem_11522");
-        memblock_unref(ctx, &mem_11519, "mem_11519");
-        memblock_unref(ctx, &mem_11516, "mem_11516");
-        memblock_unref(ctx, &mem_11505, "mem_11505");
-        memblock_unref(ctx, &mem_11502, "mem_11502");
-        memblock_unref(ctx, &mem_11497, "mem_11497");
-        memblock_unref(ctx, &mem_11492, "mem_11492");
+                               last_offset_12647, "].");
+        memblock_unref(ctx, &mem_13715, "mem_13715");
+        memblock_unref(ctx, &mem_13712, "mem_13712");
+        memblock_unref(ctx, &mem_13709, "mem_13709");
+        memblock_unref(ctx, &mem_13702, "mem_13702");
+        memblock_unref(ctx, &mem_13697, "mem_13697");
+        memblock_unref(ctx, &mem_13692, "mem_13692");
+        memblock_unref(ctx, &mem_13689, "mem_13689");
         return 1;
     }
     
-    struct memblock mem_11543;
+    struct memblock mem_13736;
     
-    mem_11543.references = NULL;
-    memblock_alloc(ctx, &mem_11543, 4, "mem_11543");
-    for (int32_t i_11593 = 0; i_11593 < 1; i_11593++) {
-        *(int32_t *) &mem_11543.mem[i_11593 * 4] = 0;
-    }
+    mem_13736.references = NULL;
+    memblock_alloc(ctx, &mem_13736, 16, "mem_13736");
     
-    struct memblock mem_11546;
+    struct memblock static_array_14153 = ctx->static_array_14153;
     
-    mem_11546.references = NULL;
-    memblock_alloc(ctx, &mem_11546, 4, "mem_11546");
-    for (int32_t i_11594 = 0; i_11594 < 1; i_11594++) {
-        *(int32_t *) &mem_11546.mem[i_11594 * 4] = 4;
-    }
+    memmove(mem_13736.mem + 0, static_array_14153.mem + 0, 4 * sizeof(int32_t));
     
-    int32_t conc_tmp_11338 = 1 + x_11324;
-    int32_t res_11339;
-    int32_t redout_11457 = x_11324;
+    struct memblock mem_13739;
     
-    for (int32_t i_11458 = 0; i_11458 < x_11324; i_11458++) {
-        int32_t x_11343 = *(int32_t *) &mem_11516.mem[i_11458 * 4];
-        int32_t x_11344 = *(int32_t *) &mem_11519.mem[i_11458 * 4];
-        bool cond_11346 = x_11343 == 0;
-        bool cond_11347 = x_11344 == 0;
-        bool eq_11348 = cond_11346 && cond_11347;
-        int32_t res_11349;
+    mem_13739.references = NULL;
+    memblock_alloc(ctx, &mem_13739, 16, "mem_13739");
+    
+    struct memblock static_array_14154 = ctx->static_array_14154;
+    
+    memmove(mem_13739.mem + 0, static_array_14154.mem + 0, 4 * sizeof(int32_t));
+    
+    bool dim_eq_12672 = x_12659 == 4;
+    bool arrays_equal_12673;
+    
+    if (dim_eq_12672) {
+        bool all_equal_12675;
+        bool redout_13252 = 1;
         
-        if (eq_11348) {
-            res_11349 = i_11458;
-        } else {
-            res_11349 = x_11324;
-        }
-        
-        int32_t res_11342 = smin32(res_11349, redout_11457);
-        int32_t redout_tmp_11595 = res_11342;
-        
-        redout_11457 = redout_tmp_11595;
-    }
-    res_11339 = redout_11457;
-    
-    bool cond_11350 = res_11339 == x_11324;
-    int32_t res_11351;
-    
-    if (cond_11350) {
-        res_11351 = -1;
-    } else {
-        res_11351 = res_11339;
-    }
-    
-    bool eq_x_zz_11352 = -1 == res_11339;
-    bool not_p_11353 = !cond_11350;
-    bool p_and_eq_x_y_11354 = eq_x_zz_11352 && not_p_11353;
-    bool cond_11355 = cond_11350 || p_and_eq_x_y_11354;
-    bool cond_11356 = !cond_11355;
-    int32_t sizze_11357;
-    
-    if (cond_11356) {
-        sizze_11357 = x_11324;
-    } else {
-        sizze_11357 = conc_tmp_11338;
-    }
-    
-    int64_t binop_x_11548 = sext_i32_i64(x_11324);
-    int64_t bytes_11547 = 4 * binop_x_11548;
-    int64_t binop_x_11553 = sext_i32_i64(sizze_11357);
-    int64_t bytes_11552 = 4 * binop_x_11553;
-    int64_t binop_x_11561 = sext_i32_i64(conc_tmp_11338);
-    int64_t bytes_11560 = 4 * binop_x_11561;
-    int64_t res_mem_sizze_11569;
-    struct memblock res_mem_11570;
-    
-    res_mem_11570.references = NULL;
-    
-    int64_t res_mem_sizze_11571;
-    struct memblock res_mem_11572;
-    
-    res_mem_11572.references = NULL;
-    
-    int64_t res_mem_sizze_11573;
-    struct memblock res_mem_11574;
-    
-    res_mem_11574.references = NULL;
-    if (cond_11356) {
-        struct memblock mem_11549;
-        
-        mem_11549.references = NULL;
-        memblock_alloc(ctx, &mem_11549, bytes_11547, "mem_11549");
-        memmove(mem_11549.mem + 0, mem_11522.mem + 0, x_11324 *
-                sizeof(int32_t));
-        
-        bool less_than_zzero_11461 = slt32(res_11351, 0);
-        bool greater_than_sizze_11462 = sle32(x_11324, res_11351);
-        bool outside_bounds_dim_11463 = less_than_zzero_11461 ||
-             greater_than_sizze_11462;
-        
-        if (!outside_bounds_dim_11463) {
-            *(int32_t *) &mem_11549.mem[res_11351 * 4] = 4;
-        }
-        
-        struct memblock mem_11554;
-        
-        mem_11554.references = NULL;
-        memblock_alloc(ctx, &mem_11554, bytes_11552, "mem_11554");
-        memmove(mem_11554.mem + 0, mem_11516.mem + 0, sizze_11357 *
-                sizeof(int32_t));
-        
-        struct memblock mem_11558;
-        
-        mem_11558.references = NULL;
-        memblock_alloc(ctx, &mem_11558, bytes_11552, "mem_11558");
-        memmove(mem_11558.mem + 0, mem_11519.mem + 0, sizze_11357 *
-                sizeof(int32_t));
-        res_mem_sizze_11569 = bytes_11552;
-        memblock_set(ctx, &res_mem_11570, &mem_11554, "mem_11554");
-        res_mem_sizze_11571 = bytes_11552;
-        memblock_set(ctx, &res_mem_11572, &mem_11558, "mem_11558");
-        res_mem_sizze_11573 = bytes_11547;
-        memblock_set(ctx, &res_mem_11574, &mem_11549, "mem_11549");
-        memblock_unref(ctx, &mem_11558, "mem_11558");
-        memblock_unref(ctx, &mem_11554, "mem_11554");
-        memblock_unref(ctx, &mem_11549, "mem_11549");
-    } else {
-        struct memblock mem_11562;
-        
-        mem_11562.references = NULL;
-        memblock_alloc(ctx, &mem_11562, bytes_11560, "mem_11562");
-        
-        int32_t tmp_offs_11596 = 0;
-        
-        memmove(mem_11562.mem + tmp_offs_11596 * 4, mem_11516.mem + 0, x_11324 *
-                sizeof(int32_t));
-        tmp_offs_11596 += x_11324;
-        memmove(mem_11562.mem + tmp_offs_11596 * 4, mem_11543.mem + 0,
-                sizeof(int32_t));
-        tmp_offs_11596 += 1;
-        
-        struct memblock mem_11565;
-        
-        mem_11565.references = NULL;
-        memblock_alloc(ctx, &mem_11565, bytes_11560, "mem_11565");
-        
-        int32_t tmp_offs_11597 = 0;
-        
-        memmove(mem_11565.mem + tmp_offs_11597 * 4, mem_11519.mem + 0, x_11324 *
-                sizeof(int32_t));
-        tmp_offs_11597 += x_11324;
-        memmove(mem_11565.mem + tmp_offs_11597 * 4, mem_11543.mem + 0,
-                sizeof(int32_t));
-        tmp_offs_11597 += 1;
-        
-        struct memblock mem_11568;
-        
-        mem_11568.references = NULL;
-        memblock_alloc(ctx, &mem_11568, bytes_11560, "mem_11568");
-        
-        int32_t tmp_offs_11598 = 0;
-        
-        memmove(mem_11568.mem + tmp_offs_11598 * 4, mem_11522.mem + 0, x_11324 *
-                sizeof(int32_t));
-        tmp_offs_11598 += x_11324;
-        memmove(mem_11568.mem + tmp_offs_11598 * 4, mem_11546.mem + 0,
-                sizeof(int32_t));
-        tmp_offs_11598 += 1;
-        res_mem_sizze_11569 = bytes_11560;
-        memblock_set(ctx, &res_mem_11570, &mem_11562, "mem_11562");
-        res_mem_sizze_11571 = bytes_11560;
-        memblock_set(ctx, &res_mem_11572, &mem_11565, "mem_11565");
-        res_mem_sizze_11573 = bytes_11560;
-        memblock_set(ctx, &res_mem_11574, &mem_11568, "mem_11568");
-        memblock_unref(ctx, &mem_11568, "mem_11568");
-        memblock_unref(ctx, &mem_11565, "mem_11565");
-        memblock_unref(ctx, &mem_11562, "mem_11562");
-    }
-    memblock_unref(ctx, &mem_11516, "mem_11516");
-    memblock_unref(ctx, &mem_11519, "mem_11519");
-    memblock_unref(ctx, &mem_11522, "mem_11522");
-    memblock_unref(ctx, &mem_11543, "mem_11543");
-    memblock_unref(ctx, &mem_11546, "mem_11546");
-    
-    bool eq_x_y_11372 = 0 == x_11324;
-    bool p_and_eq_x_y_11373 = cond_11356 && eq_x_y_11372;
-    bool both_empty_11374 = p_and_eq_x_y_11373 && p_and_eq_x_y_11373;
-    bool p_and_eq_x_y_11375 = cond_11356 && cond_11356;
-    bool p_and_eq_x_y_11376 = cond_11355 && cond_11355;
-    bool dim_match_11377 = p_and_eq_x_y_11375 || p_and_eq_x_y_11376;
-    bool empty_or_match_11378 = both_empty_11374 || dim_match_11377;
-    bool empty_or_match_cert_11379;
-    
-    if (!empty_or_match_11378) {
-        ctx->error = msgprintf("Error at %s:\n%s%s%s%s\n",
-                               "tupleTest.fut:46:1-48:10 -> tupleTest.fut:48:6-48:10 -> tupleTest.fut:43:13-43:34 -> tupleSparse.fut:41:1-48:76",
-                               "Function return value does not match shape of type ",
-                               "matrix", " ", "a");
-        memblock_unref(ctx, &res_mem_11574, "res_mem_11574");
-        memblock_unref(ctx, &res_mem_11572, "res_mem_11572");
-        memblock_unref(ctx, &res_mem_11570, "res_mem_11570");
-        memblock_unref(ctx, &mem_11546, "mem_11546");
-        memblock_unref(ctx, &mem_11543, "mem_11543");
-        memblock_unref(ctx, &mem_11522, "mem_11522");
-        memblock_unref(ctx, &mem_11519, "mem_11519");
-        memblock_unref(ctx, &mem_11516, "mem_11516");
-        memblock_unref(ctx, &mem_11505, "mem_11505");
-        memblock_unref(ctx, &mem_11502, "mem_11502");
-        memblock_unref(ctx, &mem_11497, "mem_11497");
-        memblock_unref(ctx, &mem_11492, "mem_11492");
-        return 1;
-    }
-    
-    struct memblock mem_11577;
-    
-    mem_11577.references = NULL;
-    memblock_alloc(ctx, &mem_11577, 16, "mem_11577");
-    
-    struct memblock static_array_11599 = ctx->static_array_11599;
-    
-    memmove(mem_11577.mem + 0, static_array_11599.mem + 0, 4 * sizeof(int32_t));
-    
-    bool eq_x_y_11381 = 4 == x_11324;
-    bool eq_x_zz_11382 = 4 == conc_tmp_11338;
-    bool p_and_eq_x_y_11383 = cond_11356 && eq_x_y_11381;
-    bool p_and_eq_x_y_11384 = cond_11355 && eq_x_zz_11382;
-    bool dim_eq_11385 = p_and_eq_x_y_11383 || p_and_eq_x_y_11384;
-    bool arrays_equal_11386;
-    
-    if (dim_eq_11385) {
-        bool all_equal_11388;
-        bool redout_11467 = 1;
-        
-        for (int32_t i_11468 = 0; i_11468 < sizze_11357; i_11468++) {
-            int32_t x_11392 = *(int32_t *) &res_mem_11574.mem[i_11468 * 4];
-            int32_t y_11393 = *(int32_t *) &mem_11577.mem[i_11468 * 4];
-            bool res_11394 = x_11392 == y_11393;
-            bool res_11391 = res_11394 && redout_11467;
-            bool redout_tmp_11600 = res_11391;
+        for (int32_t i_13253 = 0; i_13253 < x_12659; i_13253++) {
+            int32_t x_12679 = *(int32_t *) &mem_13709.mem[i_13253 * 4];
+            int32_t y_12680 = *(int32_t *) &mem_13736.mem[i_13253 * 4];
+            bool res_12681 = x_12679 == y_12680;
+            bool res_12678 = res_12681 && redout_13252;
+            bool redout_tmp_14155 = res_12678;
             
-            redout_11467 = redout_tmp_11600;
+            redout_13252 = redout_tmp_14155;
         }
-        all_equal_11388 = redout_11467;
-        arrays_equal_11386 = all_equal_11388;
+        all_equal_12675 = redout_13252;
+        arrays_equal_12673 = all_equal_12675;
     } else {
-        arrays_equal_11386 = 0;
+        arrays_equal_12673 = 0;
     }
-    memblock_unref(ctx, &res_mem_11574, "res_mem_11574");
-    memblock_unref(ctx, &mem_11577, "mem_11577");
+    memblock_unref(ctx, &mem_13709, "mem_13709");
+    memblock_unref(ctx, &mem_13736, "mem_13736");
     
-    struct memblock mem_11580;
+    bool arrays_equal_12682;
     
-    mem_11580.references = NULL;
-    memblock_alloc(ctx, &mem_11580, 16, "mem_11580");
-    
-    struct memblock static_array_11601 = ctx->static_array_11601;
-    
-    memmove(mem_11580.mem + 0, static_array_11601.mem + 0, 4 * sizeof(int32_t));
-    
-    struct memblock mem_11583;
-    
-    mem_11583.references = NULL;
-    memblock_alloc(ctx, &mem_11583, 16, "mem_11583");
-    
-    struct memblock static_array_11602 = ctx->static_array_11602;
-    
-    memmove(mem_11583.mem + 0, static_array_11602.mem + 0, 4 * sizeof(int32_t));
-    
-    bool res_11397;
-    
-    if (arrays_equal_11386) {
-        bool arrays_equal_11398;
+    if (dim_eq_12672) {
+        bool all_equal_12684;
+        bool redout_13254 = 1;
         
-        if (dim_eq_11385) {
-            bool all_equal_11400;
-            bool redout_11469 = 1;
+        for (int32_t i_13255 = 0; i_13255 < x_12659; i_13255++) {
+            int32_t x_12688 = *(int32_t *) &mem_13712.mem[i_13255 * 4];
+            int32_t y_12689 = *(int32_t *) &mem_13739.mem[i_13255 * 4];
+            bool res_12690 = x_12688 == y_12689;
+            bool res_12687 = res_12690 && redout_13254;
+            bool redout_tmp_14156 = res_12687;
             
-            for (int32_t i_11470 = 0; i_11470 < sizze_11357; i_11470++) {
-                int32_t x_11404 = *(int32_t *) &res_mem_11570.mem[i_11470 * 4];
-                int32_t y_11405 = *(int32_t *) &mem_11580.mem[i_11470 * 4];
-                bool res_11406 = x_11404 == y_11405;
-                bool res_11403 = res_11406 && redout_11469;
-                bool redout_tmp_11603 = res_11403;
+            redout_13254 = redout_tmp_14156;
+        }
+        all_equal_12684 = redout_13254;
+        arrays_equal_12682 = all_equal_12684;
+    } else {
+        arrays_equal_12682 = 0;
+    }
+    memblock_unref(ctx, &mem_13712, "mem_13712");
+    memblock_unref(ctx, &mem_13739, "mem_13739");
+    
+    bool eq_12691 = arrays_equal_12673 && arrays_equal_12682;
+    bool res_12692;
+    
+    if (eq_12691) {
+        bool arrays_equal_12693;
+        
+        if (dim_eq_12672) {
+            bool all_equal_12695;
+            bool redout_13256 = 1;
+            
+            for (int32_t i_13257 = 0; i_13257 < x_12659; i_13257++) {
+                int32_t x_12699 = *(int32_t *) &mem_13715.mem[i_13257 * 4];
+                int32_t y_12700 = *(int32_t *) &mem_13689.mem[i_13257 * 4];
+                bool res_12701 = x_12699 == y_12700;
+                bool res_12698 = res_12701 && redout_13256;
+                bool redout_tmp_14157 = res_12698;
                 
-                redout_11469 = redout_tmp_11603;
+                redout_13256 = redout_tmp_14157;
             }
-            all_equal_11400 = redout_11469;
-            arrays_equal_11398 = all_equal_11400;
+            all_equal_12695 = redout_13256;
+            arrays_equal_12693 = all_equal_12695;
         } else {
-            arrays_equal_11398 = 0;
+            arrays_equal_12693 = 0;
         }
-        
-        bool arrays_equal_11407;
-        
-        if (dim_eq_11385) {
-            bool all_equal_11409;
-            bool redout_11471 = 1;
-            
-            for (int32_t i_11472 = 0; i_11472 < sizze_11357; i_11472++) {
-                int32_t x_11413 = *(int32_t *) &res_mem_11572.mem[i_11472 * 4];
-                int32_t y_11414 = *(int32_t *) &mem_11583.mem[i_11472 * 4];
-                bool res_11415 = x_11413 == y_11414;
-                bool res_11412 = res_11415 && redout_11471;
-                bool redout_tmp_11604 = res_11412;
-                
-                redout_11471 = redout_tmp_11604;
-            }
-            all_equal_11409 = redout_11471;
-            arrays_equal_11407 = all_equal_11409;
-        } else {
-            arrays_equal_11407 = 0;
-        }
-        
-        bool eq_11416 = arrays_equal_11398 && arrays_equal_11407;
-        
-        res_11397 = eq_11416;
+        res_12692 = arrays_equal_12693;
     } else {
-        res_11397 = 0;
+        res_12692 = 0;
     }
-    memblock_unref(ctx, &res_mem_11570, "res_mem_11570");
-    memblock_unref(ctx, &res_mem_11572, "res_mem_11572");
-    memblock_unref(ctx, &mem_11580, "mem_11580");
-    memblock_unref(ctx, &mem_11583, "mem_11583");
-    scalar_out_11584 = res_11397;
-    *out_scalar_out_11605 = scalar_out_11584;
-    memblock_unref(ctx, &mem_11583, "mem_11583");
-    memblock_unref(ctx, &mem_11580, "mem_11580");
-    memblock_unref(ctx, &mem_11577, "mem_11577");
-    memblock_unref(ctx, &res_mem_11574, "res_mem_11574");
-    memblock_unref(ctx, &res_mem_11572, "res_mem_11572");
-    memblock_unref(ctx, &res_mem_11570, "res_mem_11570");
-    memblock_unref(ctx, &mem_11546, "mem_11546");
-    memblock_unref(ctx, &mem_11543, "mem_11543");
-    memblock_unref(ctx, &mem_11522, "mem_11522");
-    memblock_unref(ctx, &mem_11519, "mem_11519");
-    memblock_unref(ctx, &mem_11516, "mem_11516");
-    memblock_unref(ctx, &mem_11505, "mem_11505");
-    memblock_unref(ctx, &mem_11502, "mem_11502");
-    memblock_unref(ctx, &mem_11497, "mem_11497");
-    memblock_unref(ctx, &mem_11492, "mem_11492");
+    memblock_unref(ctx, &mem_13715, "mem_13715");
+    
+    struct memblock mem_13742;
+    
+    mem_13742.references = NULL;
+    memblock_alloc(ctx, &mem_13742, 12, "mem_13742");
+    
+    struct memblock static_array_14158 = ctx->static_array_14158;
+    
+    memmove(mem_13742.mem + 0, static_array_14158.mem + 0, 3 * sizeof(int32_t));
+    
+    struct memblock mem_13745;
+    
+    mem_13745.references = NULL;
+    memblock_alloc(ctx, &mem_13745, 12, "mem_13745");
+    
+    struct memblock static_array_14159 = ctx->static_array_14159;
+    
+    memmove(mem_13745.mem + 0, static_array_14159.mem + 0, 3 * sizeof(int32_t));
+    
+    struct memblock mem_13748;
+    
+    mem_13748.references = NULL;
+    memblock_alloc(ctx, &mem_13748, 12, "mem_13748");
+    
+    struct memblock static_array_14160 = ctx->static_array_14160;
+    
+    memmove(mem_13748.mem + 0, static_array_14160.mem + 0, 3 * sizeof(int32_t));
+    
+    bool cond_12706;
+    
+    if (res_12692) {
+        struct memblock mem_13751;
+        
+        mem_13751.references = NULL;
+        memblock_alloc(ctx, &mem_13751, 16, "mem_13751");
+        
+        struct memblock mem_13756;
+        
+        mem_13756.references = NULL;
+        memblock_alloc(ctx, &mem_13756, 8, "mem_13756");
+        for (int32_t i_13260 = 0; i_13260 < 2; i_13260++) {
+            for (int32_t i_14162 = 0; i_14162 < 2; i_14162++) {
+                *(int32_t *) &mem_13756.mem[i_14162 * 4] = i_13260;
+            }
+            memmove(mem_13751.mem + 2 * i_13260 * 4, mem_13756.mem + 0, 2 *
+                    sizeof(int32_t));
+        }
+        memblock_unref(ctx, &mem_13756, "mem_13756");
+        
+        struct memblock mem_13761;
+        
+        mem_13761.references = NULL;
+        memblock_alloc(ctx, &mem_13761, 16, "mem_13761");
+        
+        struct memblock mem_13764;
+        
+        mem_13764.references = NULL;
+        memblock_alloc(ctx, &mem_13764, 16, "mem_13764");
+        
+        int32_t discard_13270;
+        int32_t scanacc_13264 = 0;
+        
+        for (int32_t i_13267 = 0; i_13267 < 4; i_13267++) {
+            bool not_arg_12717 = i_13267 == 0;
+            bool res_12718 = !not_arg_12717;
+            int32_t part_res_12719;
+            
+            if (res_12718) {
+                part_res_12719 = 0;
+            } else {
+                part_res_12719 = 1;
+            }
+            
+            int32_t part_res_12720;
+            
+            if (res_12718) {
+                part_res_12720 = 1;
+            } else {
+                part_res_12720 = 0;
+            }
+            
+            int32_t zz_12715 = part_res_12720 + scanacc_13264;
+            
+            *(int32_t *) &mem_13761.mem[i_13267 * 4] = zz_12715;
+            *(int32_t *) &mem_13764.mem[i_13267 * 4] = part_res_12719;
+            
+            int32_t scanacc_tmp_14163 = zz_12715;
+            
+            scanacc_13264 = scanacc_tmp_14163;
+        }
+        discard_13270 = scanacc_13264;
+        
+        int32_t last_offset_12721 = *(int32_t *) &mem_13761.mem[12];
+        int64_t binop_x_13774 = sext_i32_i64(last_offset_12721);
+        int64_t bytes_13773 = 4 * binop_x_13774;
+        struct memblock mem_13775;
+        
+        mem_13775.references = NULL;
+        memblock_alloc(ctx, &mem_13775, bytes_13773, "mem_13775");
+        
+        struct memblock mem_13778;
+        
+        mem_13778.references = NULL;
+        memblock_alloc(ctx, &mem_13778, bytes_13773, "mem_13778");
+        
+        struct memblock mem_13781;
+        
+        mem_13781.references = NULL;
+        memblock_alloc(ctx, &mem_13781, bytes_13773, "mem_13781");
+        for (int32_t write_iter_13271 = 0; write_iter_13271 < 4;
+             write_iter_13271++) {
+            int32_t write_iv_13275 =
+                    *(int32_t *) &mem_13764.mem[write_iter_13271 * 4];
+            int32_t write_iv_13276 =
+                    *(int32_t *) &mem_13761.mem[write_iter_13271 * 4];
+            int32_t new_index_13584 = squot32(write_iter_13271, 2);
+            int32_t binop_y_13586 = 2 * new_index_13584;
+            int32_t new_index_13587 = write_iter_13271 - binop_y_13586;
+            int32_t write_iv_13277 =
+                    *(int32_t *) &mem_13751.mem[(new_index_13584 * 2 +
+                                                 new_index_13587) * 4];
+            bool is_this_one_12733 = write_iv_13275 == 0;
+            int32_t this_offset_12734 = -1 + write_iv_13276;
+            int32_t total_res_12735;
+            
+            if (is_this_one_12733) {
+                total_res_12735 = this_offset_12734;
+            } else {
+                total_res_12735 = -1;
+            }
+            
+            bool less_than_zzero_13280 = slt32(total_res_12735, 0);
+            bool greater_than_sizze_13281 = sle32(last_offset_12721,
+                                                  total_res_12735);
+            bool outside_bounds_dim_13282 = less_than_zzero_13280 ||
+                 greater_than_sizze_13281;
+            
+            if (!outside_bounds_dim_13282) {
+                *(int32_t *) &mem_13775.mem[total_res_12735 * 4] =
+                    write_iv_13277;
+            }
+            if (!outside_bounds_dim_13282) {
+                *(int32_t *) &mem_13778.mem[total_res_12735 * 4] =
+                    new_index_13587;
+            }
+            if (!outside_bounds_dim_13282) {
+                *(int32_t *) &mem_13781.mem[total_res_12735 * 4] =
+                    write_iter_13271;
+            }
+        }
+        memblock_unref(ctx, &mem_13751, "mem_13751");
+        memblock_unref(ctx, &mem_13761, "mem_13761");
+        memblock_unref(ctx, &mem_13764, "mem_13764");
+        
+        int32_t x_12736 = abs(last_offset_12721);
+        bool empty_slice_12737 = x_12736 == 0;
+        int32_t m_12738 = x_12736 - 1;
+        bool zzero_leq_i_p_m_t_s_12739 = sle32(0, m_12738);
+        bool i_p_m_t_s_leq_w_12740 = slt32(m_12738, last_offset_12721);
+        bool y_12741 = zzero_leq_i_p_m_t_s_12739 && i_p_m_t_s_leq_w_12740;
+        bool ok_or_empty_12742 = empty_slice_12737 || y_12741;
+        bool index_certs_12743;
+        
+        if (!ok_or_empty_12742) {
+            ctx->error = msgprintf("Error at %s:\n%s%s%s%d%s%d%s\n",
+                                   "tupleTest.fut:75:1-77:24 -> tupleTest.fut:76:20-76:24 -> tupleTest.fut:21:13-21:29 -> tupleSparse.fut:23:18-23:61 -> /futlib/soacs.fut:135:6-135:16",
+                                   "Index [", "", ":", last_offset_12721,
+                                   "] out of bounds for array of shape [",
+                                   last_offset_12721, "].");
+            memblock_unref(ctx, &mem_13781, "mem_13781");
+            memblock_unref(ctx, &mem_13778, "mem_13778");
+            memblock_unref(ctx, &mem_13775, "mem_13775");
+            memblock_unref(ctx, &mem_13764, "mem_13764");
+            memblock_unref(ctx, &mem_13761, "mem_13761");
+            memblock_unref(ctx, &mem_13756, "mem_13756");
+            memblock_unref(ctx, &mem_13751, "mem_13751");
+            memblock_unref(ctx, &mem_13748, "mem_13748");
+            memblock_unref(ctx, &mem_13745, "mem_13745");
+            memblock_unref(ctx, &mem_13742, "mem_13742");
+            memblock_unref(ctx, &mem_13739, "mem_13739");
+            memblock_unref(ctx, &mem_13736, "mem_13736");
+            memblock_unref(ctx, &mem_13715, "mem_13715");
+            memblock_unref(ctx, &mem_13712, "mem_13712");
+            memblock_unref(ctx, &mem_13709, "mem_13709");
+            memblock_unref(ctx, &mem_13702, "mem_13702");
+            memblock_unref(ctx, &mem_13697, "mem_13697");
+            memblock_unref(ctx, &mem_13692, "mem_13692");
+            memblock_unref(ctx, &mem_13689, "mem_13689");
+            return 1;
+        }
+        
+        bool dim_eq_12747 = x_12736 == 3;
+        bool arrays_equal_12748;
+        
+        if (dim_eq_12747) {
+            bool all_equal_12750;
+            bool redout_13298 = 1;
+            
+            for (int32_t i_13299 = 0; i_13299 < x_12736; i_13299++) {
+                int32_t x_12754 = *(int32_t *) &mem_13775.mem[i_13299 * 4];
+                int32_t y_12755 = *(int32_t *) &mem_13742.mem[i_13299 * 4];
+                bool res_12756 = x_12754 == y_12755;
+                bool res_12753 = res_12756 && redout_13298;
+                bool redout_tmp_14169 = res_12753;
+                
+                redout_13298 = redout_tmp_14169;
+            }
+            all_equal_12750 = redout_13298;
+            arrays_equal_12748 = all_equal_12750;
+        } else {
+            arrays_equal_12748 = 0;
+        }
+        memblock_unref(ctx, &mem_13775, "mem_13775");
+        
+        bool arrays_equal_12757;
+        
+        if (dim_eq_12747) {
+            bool all_equal_12759;
+            bool redout_13300 = 1;
+            
+            for (int32_t i_13301 = 0; i_13301 < x_12736; i_13301++) {
+                int32_t x_12763 = *(int32_t *) &mem_13778.mem[i_13301 * 4];
+                int32_t y_12764 = *(int32_t *) &mem_13745.mem[i_13301 * 4];
+                bool res_12765 = x_12763 == y_12764;
+                bool res_12762 = res_12765 && redout_13300;
+                bool redout_tmp_14170 = res_12762;
+                
+                redout_13300 = redout_tmp_14170;
+            }
+            all_equal_12759 = redout_13300;
+            arrays_equal_12757 = all_equal_12759;
+        } else {
+            arrays_equal_12757 = 0;
+        }
+        memblock_unref(ctx, &mem_13778, "mem_13778");
+        
+        bool eq_12766 = arrays_equal_12748 && arrays_equal_12757;
+        bool res_12767;
+        
+        if (eq_12766) {
+            bool arrays_equal_12768;
+            
+            if (dim_eq_12747) {
+                bool all_equal_12770;
+                bool redout_13302 = 1;
+                
+                for (int32_t i_13303 = 0; i_13303 < x_12736; i_13303++) {
+                    int32_t x_12774 = *(int32_t *) &mem_13781.mem[i_13303 * 4];
+                    int32_t y_12775 = *(int32_t *) &mem_13748.mem[i_13303 * 4];
+                    bool res_12776 = x_12774 == y_12775;
+                    bool res_12773 = res_12776 && redout_13302;
+                    bool redout_tmp_14171 = res_12773;
+                    
+                    redout_13302 = redout_tmp_14171;
+                }
+                all_equal_12770 = redout_13302;
+                arrays_equal_12768 = all_equal_12770;
+            } else {
+                arrays_equal_12768 = 0;
+            }
+            res_12767 = arrays_equal_12768;
+        } else {
+            res_12767 = 0;
+        }
+        memblock_unref(ctx, &mem_13781, "mem_13781");
+        cond_12706 = res_12767;
+        memblock_unref(ctx, &mem_13781, "mem_13781");
+        memblock_unref(ctx, &mem_13778, "mem_13778");
+        memblock_unref(ctx, &mem_13775, "mem_13775");
+        memblock_unref(ctx, &mem_13764, "mem_13764");
+        memblock_unref(ctx, &mem_13761, "mem_13761");
+        memblock_unref(ctx, &mem_13756, "mem_13756");
+        memblock_unref(ctx, &mem_13751, "mem_13751");
+    } else {
+        cond_12706 = 0;
+    }
+    memblock_unref(ctx, &mem_13748, "mem_13748");
+    
+    bool cond_12777;
+    
+    if (cond_12706) {
+        struct memblock mem_13802;
+        
+        mem_13802.references = NULL;
+        memblock_alloc(ctx, &mem_13802, 16, "mem_13802");
+        
+        struct memblock mem_13807;
+        
+        mem_13807.references = NULL;
+        memblock_alloc(ctx, &mem_13807, 8, "mem_13807");
+        for (int32_t i_13306 = 0; i_13306 < 2; i_13306++) {
+            for (int32_t i_14173 = 0; i_14173 < 2; i_14173++) {
+                *(int32_t *) &mem_13807.mem[i_14173 * 4] = i_13306;
+            }
+            memmove(mem_13802.mem + 2 * i_13306 * 4, mem_13807.mem + 0, 2 *
+                    sizeof(int32_t));
+        }
+        memblock_unref(ctx, &mem_13807, "mem_13807");
+        
+        struct memblock mem_13812;
+        
+        mem_13812.references = NULL;
+        memblock_alloc(ctx, &mem_13812, 16, "mem_13812");
+        
+        struct memblock mem_13815;
+        
+        mem_13815.references = NULL;
+        memblock_alloc(ctx, &mem_13815, 16, "mem_13815");
+        
+        int32_t discard_13316;
+        int32_t scanacc_13310 = 0;
+        
+        for (int32_t i_13313 = 0; i_13313 < 4; i_13313++) {
+            bool not_arg_12788 = i_13313 == 0;
+            bool res_12789 = !not_arg_12788;
+            int32_t part_res_12790;
+            
+            if (res_12789) {
+                part_res_12790 = 0;
+            } else {
+                part_res_12790 = 1;
+            }
+            
+            int32_t part_res_12791;
+            
+            if (res_12789) {
+                part_res_12791 = 1;
+            } else {
+                part_res_12791 = 0;
+            }
+            
+            int32_t zz_12786 = part_res_12791 + scanacc_13310;
+            
+            *(int32_t *) &mem_13812.mem[i_13313 * 4] = zz_12786;
+            *(int32_t *) &mem_13815.mem[i_13313 * 4] = part_res_12790;
+            
+            int32_t scanacc_tmp_14174 = zz_12786;
+            
+            scanacc_13310 = scanacc_tmp_14174;
+        }
+        discard_13316 = scanacc_13310;
+        
+        int32_t last_offset_12792 = *(int32_t *) &mem_13812.mem[12];
+        int64_t binop_x_13825 = sext_i32_i64(last_offset_12792);
+        int64_t bytes_13824 = 4 * binop_x_13825;
+        struct memblock mem_13826;
+        
+        mem_13826.references = NULL;
+        memblock_alloc(ctx, &mem_13826, bytes_13824, "mem_13826");
+        
+        struct memblock mem_13829;
+        
+        mem_13829.references = NULL;
+        memblock_alloc(ctx, &mem_13829, bytes_13824, "mem_13829");
+        
+        struct memblock mem_13832;
+        
+        mem_13832.references = NULL;
+        memblock_alloc(ctx, &mem_13832, bytes_13824, "mem_13832");
+        for (int32_t write_iter_13317 = 0; write_iter_13317 < 4;
+             write_iter_13317++) {
+            int32_t write_iv_13321 =
+                    *(int32_t *) &mem_13815.mem[write_iter_13317 * 4];
+            int32_t write_iv_13322 =
+                    *(int32_t *) &mem_13812.mem[write_iter_13317 * 4];
+            int32_t new_index_13602 = squot32(write_iter_13317, 2);
+            int32_t binop_y_13604 = 2 * new_index_13602;
+            int32_t new_index_13605 = write_iter_13317 - binop_y_13604;
+            int32_t write_iv_13323 =
+                    *(int32_t *) &mem_13802.mem[(new_index_13602 * 2 +
+                                                 new_index_13605) * 4];
+            bool is_this_one_12804 = write_iv_13321 == 0;
+            int32_t this_offset_12805 = -1 + write_iv_13322;
+            int32_t total_res_12806;
+            
+            if (is_this_one_12804) {
+                total_res_12806 = this_offset_12805;
+            } else {
+                total_res_12806 = -1;
+            }
+            
+            bool less_than_zzero_13326 = slt32(total_res_12806, 0);
+            bool greater_than_sizze_13327 = sle32(last_offset_12792,
+                                                  total_res_12806);
+            bool outside_bounds_dim_13328 = less_than_zzero_13326 ||
+                 greater_than_sizze_13327;
+            
+            if (!outside_bounds_dim_13328) {
+                *(int32_t *) &mem_13826.mem[total_res_12806 * 4] =
+                    write_iv_13323;
+            }
+            if (!outside_bounds_dim_13328) {
+                *(int32_t *) &mem_13829.mem[total_res_12806 * 4] =
+                    new_index_13605;
+            }
+            if (!outside_bounds_dim_13328) {
+                *(int32_t *) &mem_13832.mem[total_res_12806 * 4] =
+                    write_iter_13317;
+            }
+        }
+        memblock_unref(ctx, &mem_13802, "mem_13802");
+        memblock_unref(ctx, &mem_13812, "mem_13812");
+        memblock_unref(ctx, &mem_13815, "mem_13815");
+        
+        int32_t x_12807 = abs(last_offset_12792);
+        bool empty_slice_12808 = x_12807 == 0;
+        int32_t m_12809 = x_12807 - 1;
+        bool zzero_leq_i_p_m_t_s_12810 = sle32(0, m_12809);
+        bool i_p_m_t_s_leq_w_12811 = slt32(m_12809, last_offset_12792);
+        bool y_12812 = zzero_leq_i_p_m_t_s_12810 && i_p_m_t_s_leq_w_12811;
+        bool ok_or_empty_12813 = empty_slice_12808 || y_12812;
+        bool index_certs_12814;
+        
+        if (!ok_or_empty_12813) {
+            ctx->error = msgprintf("Error at %s:\n%s%s%s%d%s%d%s\n",
+                                   "tupleTest.fut:75:1-77:24 -> tupleTest.fut:76:29-76:33 -> tupleTest.fut:27:14-27:30 -> tupleSparse.fut:23:18-23:61 -> /futlib/soacs.fut:135:6-135:16",
+                                   "Index [", "", ":", last_offset_12792,
+                                   "] out of bounds for array of shape [",
+                                   last_offset_12792, "].");
+            memblock_unref(ctx, &mem_13832, "mem_13832");
+            memblock_unref(ctx, &mem_13829, "mem_13829");
+            memblock_unref(ctx, &mem_13826, "mem_13826");
+            memblock_unref(ctx, &mem_13815, "mem_13815");
+            memblock_unref(ctx, &mem_13812, "mem_13812");
+            memblock_unref(ctx, &mem_13807, "mem_13807");
+            memblock_unref(ctx, &mem_13802, "mem_13802");
+            memblock_unref(ctx, &mem_13748, "mem_13748");
+            memblock_unref(ctx, &mem_13745, "mem_13745");
+            memblock_unref(ctx, &mem_13742, "mem_13742");
+            memblock_unref(ctx, &mem_13739, "mem_13739");
+            memblock_unref(ctx, &mem_13736, "mem_13736");
+            memblock_unref(ctx, &mem_13715, "mem_13715");
+            memblock_unref(ctx, &mem_13712, "mem_13712");
+            memblock_unref(ctx, &mem_13709, "mem_13709");
+            memblock_unref(ctx, &mem_13702, "mem_13702");
+            memblock_unref(ctx, &mem_13697, "mem_13697");
+            memblock_unref(ctx, &mem_13692, "mem_13692");
+            memblock_unref(ctx, &mem_13689, "mem_13689");
+            return 1;
+        }
+        
+        struct memblock mem_13853;
+        
+        mem_13853.references = NULL;
+        memblock_alloc(ctx, &mem_13853, 16, "mem_13853");
+        for (int32_t i_14180 = 0; i_14180 < 4; i_14180++) {
+            *(int32_t *) &mem_13853.mem[i_14180 * 4] = 0;
+        }
+        for (int32_t write_iter_13344 = 0; write_iter_13344 < x_12807;
+             write_iter_13344++) {
+            int32_t write_iv_13346 =
+                    *(int32_t *) &mem_13826.mem[write_iter_13344 * 4];
+            int32_t write_iv_13347 =
+                    *(int32_t *) &mem_13829.mem[write_iter_13344 * 4];
+            int32_t write_iv_13348 =
+                    *(int32_t *) &mem_13832.mem[write_iter_13344 * 4];
+            int32_t x_12823 = 2 * write_iv_13346;
+            int32_t res_12824 = x_12823 + write_iv_13347;
+            bool less_than_zzero_13349 = slt32(res_12824, 0);
+            bool greater_than_sizze_13350 = sle32(4, res_12824);
+            bool outside_bounds_dim_13351 = less_than_zzero_13349 ||
+                 greater_than_sizze_13350;
+            
+            if (!outside_bounds_dim_13351) {
+                *(int32_t *) &mem_13853.mem[res_12824 * 4] = write_iv_13348;
+            }
+        }
+        memblock_unref(ctx, &mem_13826, "mem_13826");
+        memblock_unref(ctx, &mem_13829, "mem_13829");
+        memblock_unref(ctx, &mem_13832, "mem_13832");
+        
+        bool all_equal_12825;
+        bool redout_13355 = 1;
+        
+        for (int32_t i_13356 = 0; i_13356 < 4; i_13356++) {
+            int32_t y_12830 = *(int32_t *) &mem_13853.mem[i_13356 * 4];
+            bool res_12831 = i_13356 == y_12830;
+            bool res_12828 = res_12831 && redout_13355;
+            bool redout_tmp_14182 = res_12828;
+            
+            redout_13355 = redout_tmp_14182;
+        }
+        all_equal_12825 = redout_13355;
+        memblock_unref(ctx, &mem_13853, "mem_13853");
+        cond_12777 = all_equal_12825;
+        memblock_unref(ctx, &mem_13853, "mem_13853");
+        memblock_unref(ctx, &mem_13832, "mem_13832");
+        memblock_unref(ctx, &mem_13829, "mem_13829");
+        memblock_unref(ctx, &mem_13826, "mem_13826");
+        memblock_unref(ctx, &mem_13815, "mem_13815");
+        memblock_unref(ctx, &mem_13812, "mem_13812");
+        memblock_unref(ctx, &mem_13807, "mem_13807");
+        memblock_unref(ctx, &mem_13802, "mem_13802");
+    } else {
+        cond_12777 = 0;
+    }
+    
+    struct memblock mem_13862;
+    
+    mem_13862.references = NULL;
+    memblock_alloc(ctx, &mem_13862, 12, "mem_13862");
+    
+    struct memblock static_array_14183 = ctx->static_array_14183;
+    
+    memmove(mem_13862.mem + 0, static_array_14183.mem + 0, 3 * sizeof(int32_t));
+    
+    bool cond_12851;
+    
+    if (cond_12777) {
+        struct memblock mem_13865;
+        
+        mem_13865.references = NULL;
+        memblock_alloc(ctx, &mem_13865, 16, "mem_13865");
+        
+        struct memblock mem_13870;
+        
+        mem_13870.references = NULL;
+        memblock_alloc(ctx, &mem_13870, 8, "mem_13870");
+        for (int32_t i_13372 = 0; i_13372 < 2; i_13372++) {
+            for (int32_t i_14185 = 0; i_14185 < 2; i_14185++) {
+                *(int32_t *) &mem_13870.mem[i_14185 * 4] = i_13372;
+            }
+            memmove(mem_13865.mem + 2 * i_13372 * 4, mem_13870.mem + 0, 2 *
+                    sizeof(int32_t));
+        }
+        memblock_unref(ctx, &mem_13870, "mem_13870");
+        
+        struct memblock mem_13875;
+        
+        mem_13875.references = NULL;
+        memblock_alloc(ctx, &mem_13875, 16, "mem_13875");
+        
+        struct memblock mem_13878;
+        
+        mem_13878.references = NULL;
+        memblock_alloc(ctx, &mem_13878, 16, "mem_13878");
+        
+        int32_t discard_13382;
+        int32_t scanacc_13376 = 0;
+        
+        for (int32_t i_13379 = 0; i_13379 < 4; i_13379++) {
+            bool not_arg_12862 = i_13379 == 0;
+            bool res_12863 = !not_arg_12862;
+            int32_t part_res_12864;
+            
+            if (res_12863) {
+                part_res_12864 = 0;
+            } else {
+                part_res_12864 = 1;
+            }
+            
+            int32_t part_res_12865;
+            
+            if (res_12863) {
+                part_res_12865 = 1;
+            } else {
+                part_res_12865 = 0;
+            }
+            
+            int32_t zz_12860 = part_res_12865 + scanacc_13376;
+            
+            *(int32_t *) &mem_13875.mem[i_13379 * 4] = zz_12860;
+            *(int32_t *) &mem_13878.mem[i_13379 * 4] = part_res_12864;
+            
+            int32_t scanacc_tmp_14186 = zz_12860;
+            
+            scanacc_13376 = scanacc_tmp_14186;
+        }
+        discard_13382 = scanacc_13376;
+        
+        int32_t last_offset_12866 = *(int32_t *) &mem_13875.mem[12];
+        int64_t binop_x_13888 = sext_i32_i64(last_offset_12866);
+        int64_t bytes_13887 = 4 * binop_x_13888;
+        struct memblock mem_13889;
+        
+        mem_13889.references = NULL;
+        memblock_alloc(ctx, &mem_13889, bytes_13887, "mem_13889");
+        
+        struct memblock mem_13892;
+        
+        mem_13892.references = NULL;
+        memblock_alloc(ctx, &mem_13892, bytes_13887, "mem_13892");
+        
+        struct memblock mem_13895;
+        
+        mem_13895.references = NULL;
+        memblock_alloc(ctx, &mem_13895, bytes_13887, "mem_13895");
+        for (int32_t write_iter_13383 = 0; write_iter_13383 < 4;
+             write_iter_13383++) {
+            int32_t write_iv_13387 =
+                    *(int32_t *) &mem_13878.mem[write_iter_13383 * 4];
+            int32_t write_iv_13388 =
+                    *(int32_t *) &mem_13875.mem[write_iter_13383 * 4];
+            int32_t new_index_13621 = squot32(write_iter_13383, 2);
+            int32_t binop_y_13623 = 2 * new_index_13621;
+            int32_t new_index_13624 = write_iter_13383 - binop_y_13623;
+            int32_t write_iv_13389 =
+                    *(int32_t *) &mem_13865.mem[(new_index_13621 * 2 +
+                                                 new_index_13624) * 4];
+            bool is_this_one_12878 = write_iv_13387 == 0;
+            int32_t this_offset_12879 = -1 + write_iv_13388;
+            int32_t total_res_12880;
+            
+            if (is_this_one_12878) {
+                total_res_12880 = this_offset_12879;
+            } else {
+                total_res_12880 = -1;
+            }
+            
+            bool less_than_zzero_13392 = slt32(total_res_12880, 0);
+            bool greater_than_sizze_13393 = sle32(last_offset_12866,
+                                                  total_res_12880);
+            bool outside_bounds_dim_13394 = less_than_zzero_13392 ||
+                 greater_than_sizze_13393;
+            
+            if (!outside_bounds_dim_13394) {
+                *(int32_t *) &mem_13889.mem[total_res_12880 * 4] =
+                    write_iv_13389;
+            }
+            if (!outside_bounds_dim_13394) {
+                *(int32_t *) &mem_13892.mem[total_res_12880 * 4] =
+                    new_index_13624;
+            }
+            if (!outside_bounds_dim_13394) {
+                *(int32_t *) &mem_13895.mem[total_res_12880 * 4] =
+                    write_iter_13383;
+            }
+        }
+        memblock_unref(ctx, &mem_13865, "mem_13865");
+        memblock_unref(ctx, &mem_13875, "mem_13875");
+        memblock_unref(ctx, &mem_13878, "mem_13878");
+        
+        int32_t x_12881 = abs(last_offset_12866);
+        bool empty_slice_12882 = x_12881 == 0;
+        int32_t m_12883 = x_12881 - 1;
+        bool zzero_leq_i_p_m_t_s_12884 = sle32(0, m_12883);
+        bool i_p_m_t_s_leq_w_12885 = slt32(m_12883, last_offset_12866);
+        bool y_12886 = zzero_leq_i_p_m_t_s_12884 && i_p_m_t_s_leq_w_12885;
+        bool ok_or_empty_12887 = empty_slice_12882 || y_12886;
+        bool index_certs_12888;
+        
+        if (!ok_or_empty_12887) {
+            ctx->error = msgprintf("Error at %s:\n%s%s%s%d%s%d%s\n",
+                                   "tupleTest.fut:75:1-77:24 -> tupleTest.fut:76:56-76:60 -> tupleTest.fut:50:13-50:29 -> tupleSparse.fut:23:18-23:61 -> /futlib/soacs.fut:135:6-135:16",
+                                   "Index [", "", ":", last_offset_12866,
+                                   "] out of bounds for array of shape [",
+                                   last_offset_12866, "].");
+            memblock_unref(ctx, &mem_13895, "mem_13895");
+            memblock_unref(ctx, &mem_13892, "mem_13892");
+            memblock_unref(ctx, &mem_13889, "mem_13889");
+            memblock_unref(ctx, &mem_13878, "mem_13878");
+            memblock_unref(ctx, &mem_13875, "mem_13875");
+            memblock_unref(ctx, &mem_13870, "mem_13870");
+            memblock_unref(ctx, &mem_13865, "mem_13865");
+            memblock_unref(ctx, &mem_13862, "mem_13862");
+            memblock_unref(ctx, &mem_13748, "mem_13748");
+            memblock_unref(ctx, &mem_13745, "mem_13745");
+            memblock_unref(ctx, &mem_13742, "mem_13742");
+            memblock_unref(ctx, &mem_13739, "mem_13739");
+            memblock_unref(ctx, &mem_13736, "mem_13736");
+            memblock_unref(ctx, &mem_13715, "mem_13715");
+            memblock_unref(ctx, &mem_13712, "mem_13712");
+            memblock_unref(ctx, &mem_13709, "mem_13709");
+            memblock_unref(ctx, &mem_13702, "mem_13702");
+            memblock_unref(ctx, &mem_13697, "mem_13697");
+            memblock_unref(ctx, &mem_13692, "mem_13692");
+            memblock_unref(ctx, &mem_13689, "mem_13689");
+            return 1;
+        }
+        
+        struct memblock mem_13916;
+        
+        mem_13916.references = NULL;
+        memblock_alloc(ctx, &mem_13916, 4, "mem_13916");
+        for (int32_t i_14192 = 0; i_14192 < 1; i_14192++) {
+            *(int32_t *) &mem_13916.mem[i_14192 * 4] = 1;
+        }
+        
+        struct memblock mem_13919;
+        
+        mem_13919.references = NULL;
+        memblock_alloc(ctx, &mem_13919, 4, "mem_13919");
+        for (int32_t i_14193 = 0; i_14193 < 1; i_14193++) {
+            *(int32_t *) &mem_13919.mem[i_14193 * 4] = 0;
+        }
+        
+        struct memblock mem_13922;
+        
+        mem_13922.references = NULL;
+        memblock_alloc(ctx, &mem_13922, 4, "mem_13922");
+        for (int32_t i_14194 = 0; i_14194 < 1; i_14194++) {
+            *(int32_t *) &mem_13922.mem[i_14194 * 4] = 4;
+        }
+        
+        int32_t conc_tmp_12896 = 1 + x_12881;
+        int32_t res_12897;
+        int32_t redout_13410 = x_12881;
+        
+        for (int32_t i_13411 = 0; i_13411 < x_12881; i_13411++) {
+            int32_t x_12901 = *(int32_t *) &mem_13889.mem[i_13411 * 4];
+            int32_t x_12902 = *(int32_t *) &mem_13892.mem[i_13411 * 4];
+            bool cond_12904 = x_12901 == 1;
+            bool cond_12905 = x_12902 == 0;
+            bool eq_12906 = cond_12904 && cond_12905;
+            int32_t res_12907;
+            
+            if (eq_12906) {
+                res_12907 = i_13411;
+            } else {
+                res_12907 = x_12881;
+            }
+            
+            int32_t res_12900 = smin32(res_12907, redout_13410);
+            int32_t redout_tmp_14195 = res_12900;
+            
+            redout_13410 = redout_tmp_14195;
+        }
+        res_12897 = redout_13410;
+        
+        bool cond_12908 = res_12897 == x_12881;
+        int32_t res_12909;
+        
+        if (cond_12908) {
+            res_12909 = -1;
+        } else {
+            res_12909 = res_12897;
+        }
+        
+        bool eq_x_zz_12910 = -1 == res_12897;
+        bool not_p_12911 = !cond_12908;
+        bool p_and_eq_x_y_12912 = eq_x_zz_12910 && not_p_12911;
+        bool cond_12913 = cond_12908 || p_and_eq_x_y_12912;
+        bool cond_12914 = !cond_12913;
+        int32_t sizze_12915;
+        
+        if (cond_12914) {
+            sizze_12915 = x_12881;
+        } else {
+            sizze_12915 = conc_tmp_12896;
+        }
+        
+        int64_t binop_x_13924 = sext_i32_i64(x_12881);
+        int64_t bytes_13923 = 4 * binop_x_13924;
+        int64_t binop_x_13929 = sext_i32_i64(sizze_12915);
+        int64_t bytes_13928 = 4 * binop_x_13929;
+        int64_t binop_x_13937 = sext_i32_i64(conc_tmp_12896);
+        int64_t bytes_13936 = 4 * binop_x_13937;
+        int64_t res_mem_sizze_13945;
+        struct memblock res_mem_13946;
+        
+        res_mem_13946.references = NULL;
+        
+        int64_t res_mem_sizze_13947;
+        struct memblock res_mem_13948;
+        
+        res_mem_13948.references = NULL;
+        
+        int64_t res_mem_sizze_13949;
+        struct memblock res_mem_13950;
+        
+        res_mem_13950.references = NULL;
+        if (cond_12914) {
+            struct memblock mem_13925;
+            
+            mem_13925.references = NULL;
+            memblock_alloc(ctx, &mem_13925, bytes_13923, "mem_13925");
+            memmove(mem_13925.mem + 0, mem_13895.mem + 0, x_12881 *
+                    sizeof(int32_t));
+            
+            bool less_than_zzero_13414 = slt32(res_12909, 0);
+            bool greater_than_sizze_13415 = sle32(x_12881, res_12909);
+            bool outside_bounds_dim_13416 = less_than_zzero_13414 ||
+                 greater_than_sizze_13415;
+            
+            if (!outside_bounds_dim_13416) {
+                *(int32_t *) &mem_13925.mem[res_12909 * 4] = 4;
+            }
+            
+            struct memblock mem_13930;
+            
+            mem_13930.references = NULL;
+            memblock_alloc(ctx, &mem_13930, bytes_13928, "mem_13930");
+            memmove(mem_13930.mem + 0, mem_13889.mem + 0, sizze_12915 *
+                    sizeof(int32_t));
+            
+            struct memblock mem_13934;
+            
+            mem_13934.references = NULL;
+            memblock_alloc(ctx, &mem_13934, bytes_13928, "mem_13934");
+            memmove(mem_13934.mem + 0, mem_13892.mem + 0, sizze_12915 *
+                    sizeof(int32_t));
+            res_mem_sizze_13945 = bytes_13928;
+            memblock_set(ctx, &res_mem_13946, &mem_13930, "mem_13930");
+            res_mem_sizze_13947 = bytes_13928;
+            memblock_set(ctx, &res_mem_13948, &mem_13934, "mem_13934");
+            res_mem_sizze_13949 = bytes_13923;
+            memblock_set(ctx, &res_mem_13950, &mem_13925, "mem_13925");
+            memblock_unref(ctx, &mem_13934, "mem_13934");
+            memblock_unref(ctx, &mem_13930, "mem_13930");
+            memblock_unref(ctx, &mem_13925, "mem_13925");
+        } else {
+            struct memblock mem_13938;
+            
+            mem_13938.references = NULL;
+            memblock_alloc(ctx, &mem_13938, bytes_13936, "mem_13938");
+            
+            int32_t tmp_offs_14196 = 0;
+            
+            memmove(mem_13938.mem + tmp_offs_14196 * 4, mem_13889.mem + 0,
+                    x_12881 * sizeof(int32_t));
+            tmp_offs_14196 += x_12881;
+            memmove(mem_13938.mem + tmp_offs_14196 * 4, mem_13916.mem + 0,
+                    sizeof(int32_t));
+            tmp_offs_14196 += 1;
+            
+            struct memblock mem_13941;
+            
+            mem_13941.references = NULL;
+            memblock_alloc(ctx, &mem_13941, bytes_13936, "mem_13941");
+            
+            int32_t tmp_offs_14197 = 0;
+            
+            memmove(mem_13941.mem + tmp_offs_14197 * 4, mem_13892.mem + 0,
+                    x_12881 * sizeof(int32_t));
+            tmp_offs_14197 += x_12881;
+            memmove(mem_13941.mem + tmp_offs_14197 * 4, mem_13919.mem + 0,
+                    sizeof(int32_t));
+            tmp_offs_14197 += 1;
+            
+            struct memblock mem_13944;
+            
+            mem_13944.references = NULL;
+            memblock_alloc(ctx, &mem_13944, bytes_13936, "mem_13944");
+            
+            int32_t tmp_offs_14198 = 0;
+            
+            memmove(mem_13944.mem + tmp_offs_14198 * 4, mem_13895.mem + 0,
+                    x_12881 * sizeof(int32_t));
+            tmp_offs_14198 += x_12881;
+            memmove(mem_13944.mem + tmp_offs_14198 * 4, mem_13922.mem + 0,
+                    sizeof(int32_t));
+            tmp_offs_14198 += 1;
+            res_mem_sizze_13945 = bytes_13936;
+            memblock_set(ctx, &res_mem_13946, &mem_13938, "mem_13938");
+            res_mem_sizze_13947 = bytes_13936;
+            memblock_set(ctx, &res_mem_13948, &mem_13941, "mem_13941");
+            res_mem_sizze_13949 = bytes_13936;
+            memblock_set(ctx, &res_mem_13950, &mem_13944, "mem_13944");
+            memblock_unref(ctx, &mem_13944, "mem_13944");
+            memblock_unref(ctx, &mem_13941, "mem_13941");
+            memblock_unref(ctx, &mem_13938, "mem_13938");
+        }
+        memblock_unref(ctx, &mem_13889, "mem_13889");
+        memblock_unref(ctx, &mem_13892, "mem_13892");
+        memblock_unref(ctx, &mem_13895, "mem_13895");
+        memblock_unref(ctx, &mem_13916, "mem_13916");
+        memblock_unref(ctx, &mem_13919, "mem_13919");
+        memblock_unref(ctx, &mem_13922, "mem_13922");
+        
+        bool eq_x_y_12930 = 0 == x_12881;
+        bool p_and_eq_x_y_12931 = cond_12914 && eq_x_y_12930;
+        bool both_empty_12932 = p_and_eq_x_y_12931 && p_and_eq_x_y_12931;
+        bool p_and_eq_x_y_12933 = cond_12914 && cond_12914;
+        bool p_and_eq_x_y_12934 = cond_12913 && cond_12913;
+        bool dim_match_12935 = p_and_eq_x_y_12933 || p_and_eq_x_y_12934;
+        bool empty_or_match_12936 = both_empty_12932 || dim_match_12935;
+        bool empty_or_match_cert_12937;
+        
+        if (!empty_or_match_12936) {
+            ctx->error = msgprintf("Error at %s:\n%s%s\n",
+                                   "tupleTest.fut:75:1-77:24 -> tupleTest.fut:76:56-76:60 -> tupleTest.fut:51:13-51:34 -> tupleSparse.fut:47:1-54:76",
+                                   "Function return value does not match shape of type ",
+                                   "matrix");
+            memblock_unref(ctx, &res_mem_13950, "res_mem_13950");
+            memblock_unref(ctx, &res_mem_13948, "res_mem_13948");
+            memblock_unref(ctx, &res_mem_13946, "res_mem_13946");
+            memblock_unref(ctx, &mem_13922, "mem_13922");
+            memblock_unref(ctx, &mem_13919, "mem_13919");
+            memblock_unref(ctx, &mem_13916, "mem_13916");
+            memblock_unref(ctx, &mem_13895, "mem_13895");
+            memblock_unref(ctx, &mem_13892, "mem_13892");
+            memblock_unref(ctx, &mem_13889, "mem_13889");
+            memblock_unref(ctx, &mem_13878, "mem_13878");
+            memblock_unref(ctx, &mem_13875, "mem_13875");
+            memblock_unref(ctx, &mem_13870, "mem_13870");
+            memblock_unref(ctx, &mem_13865, "mem_13865");
+            memblock_unref(ctx, &mem_13862, "mem_13862");
+            memblock_unref(ctx, &mem_13748, "mem_13748");
+            memblock_unref(ctx, &mem_13745, "mem_13745");
+            memblock_unref(ctx, &mem_13742, "mem_13742");
+            memblock_unref(ctx, &mem_13739, "mem_13739");
+            memblock_unref(ctx, &mem_13736, "mem_13736");
+            memblock_unref(ctx, &mem_13715, "mem_13715");
+            memblock_unref(ctx, &mem_13712, "mem_13712");
+            memblock_unref(ctx, &mem_13709, "mem_13709");
+            memblock_unref(ctx, &mem_13702, "mem_13702");
+            memblock_unref(ctx, &mem_13697, "mem_13697");
+            memblock_unref(ctx, &mem_13692, "mem_13692");
+            memblock_unref(ctx, &mem_13689, "mem_13689");
+            return 1;
+        }
+        
+        bool eq_x_y_12938 = 3 == x_12881;
+        bool eq_x_zz_12939 = 3 == conc_tmp_12896;
+        bool p_and_eq_x_y_12940 = cond_12914 && eq_x_y_12938;
+        bool p_and_eq_x_y_12941 = cond_12913 && eq_x_zz_12939;
+        bool dim_eq_12942 = p_and_eq_x_y_12940 || p_and_eq_x_y_12941;
+        bool arrays_equal_12943;
+        
+        if (dim_eq_12942) {
+            bool all_equal_12945;
+            bool redout_13420 = 1;
+            
+            for (int32_t i_13421 = 0; i_13421 < sizze_12915; i_13421++) {
+                int32_t x_12949 = *(int32_t *) &res_mem_13950.mem[i_13421 * 4];
+                int32_t y_12950 = *(int32_t *) &mem_13862.mem[i_13421 * 4];
+                bool res_12951 = x_12949 == y_12950;
+                bool res_12948 = res_12951 && redout_13420;
+                bool redout_tmp_14199 = res_12948;
+                
+                redout_13420 = redout_tmp_14199;
+            }
+            all_equal_12945 = redout_13420;
+            arrays_equal_12943 = all_equal_12945;
+        } else {
+            arrays_equal_12943 = 0;
+        }
+        memblock_unref(ctx, &res_mem_13950, "res_mem_13950");
+        
+        bool res_12952;
+        
+        if (arrays_equal_12943) {
+            bool arrays_equal_12953;
+            
+            if (dim_eq_12942) {
+                bool all_equal_12955;
+                bool redout_13422 = 1;
+                
+                for (int32_t i_13423 = 0; i_13423 < sizze_12915; i_13423++) {
+                    int32_t x_12959 = *(int32_t *) &res_mem_13946.mem[i_13423 *
+                                                                      4];
+                    int32_t y_12960 = *(int32_t *) &mem_13742.mem[i_13423 * 4];
+                    bool res_12961 = x_12959 == y_12960;
+                    bool res_12958 = res_12961 && redout_13422;
+                    bool redout_tmp_14200 = res_12958;
+                    
+                    redout_13422 = redout_tmp_14200;
+                }
+                all_equal_12955 = redout_13422;
+                arrays_equal_12953 = all_equal_12955;
+            } else {
+                arrays_equal_12953 = 0;
+            }
+            
+            bool arrays_equal_12962;
+            
+            if (dim_eq_12942) {
+                bool all_equal_12964;
+                bool redout_13424 = 1;
+                
+                for (int32_t i_13425 = 0; i_13425 < sizze_12915; i_13425++) {
+                    int32_t x_12968 = *(int32_t *) &res_mem_13948.mem[i_13425 *
+                                                                      4];
+                    int32_t y_12969 = *(int32_t *) &mem_13745.mem[i_13425 * 4];
+                    bool res_12970 = x_12968 == y_12969;
+                    bool res_12967 = res_12970 && redout_13424;
+                    bool redout_tmp_14201 = res_12967;
+                    
+                    redout_13424 = redout_tmp_14201;
+                }
+                all_equal_12964 = redout_13424;
+                arrays_equal_12962 = all_equal_12964;
+            } else {
+                arrays_equal_12962 = 0;
+            }
+            
+            bool eq_12971 = arrays_equal_12953 && arrays_equal_12962;
+            
+            res_12952 = eq_12971;
+        } else {
+            res_12952 = 0;
+        }
+        memblock_unref(ctx, &res_mem_13946, "res_mem_13946");
+        memblock_unref(ctx, &res_mem_13948, "res_mem_13948");
+        cond_12851 = res_12952;
+        memblock_unref(ctx, &res_mem_13950, "res_mem_13950");
+        memblock_unref(ctx, &res_mem_13948, "res_mem_13948");
+        memblock_unref(ctx, &res_mem_13946, "res_mem_13946");
+        memblock_unref(ctx, &mem_13922, "mem_13922");
+        memblock_unref(ctx, &mem_13919, "mem_13919");
+        memblock_unref(ctx, &mem_13916, "mem_13916");
+        memblock_unref(ctx, &mem_13895, "mem_13895");
+        memblock_unref(ctx, &mem_13892, "mem_13892");
+        memblock_unref(ctx, &mem_13889, "mem_13889");
+        memblock_unref(ctx, &mem_13878, "mem_13878");
+        memblock_unref(ctx, &mem_13875, "mem_13875");
+        memblock_unref(ctx, &mem_13870, "mem_13870");
+        memblock_unref(ctx, &mem_13865, "mem_13865");
+    } else {
+        cond_12851 = 0;
+    }
+    memblock_unref(ctx, &mem_13742, "mem_13742");
+    memblock_unref(ctx, &mem_13745, "mem_13745");
+    memblock_unref(ctx, &mem_13862, "mem_13862");
+    
+    struct memblock mem_13953;
+    
+    mem_13953.references = NULL;
+    memblock_alloc(ctx, &mem_13953, 16, "mem_13953");
+    
+    struct memblock static_array_14202 = ctx->static_array_14202;
+    
+    memmove(mem_13953.mem + 0, static_array_14202.mem + 0, 4 * sizeof(int32_t));
+    
+    struct memblock mem_13956;
+    
+    mem_13956.references = NULL;
+    memblock_alloc(ctx, &mem_13956, 16, "mem_13956");
+    
+    struct memblock static_array_14203 = ctx->static_array_14203;
+    
+    memmove(mem_13956.mem + 0, static_array_14203.mem + 0, 4 * sizeof(int32_t));
+    
+    bool res_12974;
+    
+    if (cond_12851) {
+        struct memblock mem_13959;
+        
+        mem_13959.references = NULL;
+        memblock_alloc(ctx, &mem_13959, 16, "mem_13959");
+        
+        struct memblock mem_13964;
+        
+        mem_13964.references = NULL;
+        memblock_alloc(ctx, &mem_13964, 8, "mem_13964");
+        for (int32_t i_13428 = 0; i_13428 < 2; i_13428++) {
+            for (int32_t i_14205 = 0; i_14205 < 2; i_14205++) {
+                *(int32_t *) &mem_13964.mem[i_14205 * 4] = i_13428;
+            }
+            memmove(mem_13959.mem + 2 * i_13428 * 4, mem_13964.mem + 0, 2 *
+                    sizeof(int32_t));
+        }
+        memblock_unref(ctx, &mem_13964, "mem_13964");
+        
+        struct memblock mem_13969;
+        
+        mem_13969.references = NULL;
+        memblock_alloc(ctx, &mem_13969, 16, "mem_13969");
+        
+        struct memblock mem_13972;
+        
+        mem_13972.references = NULL;
+        memblock_alloc(ctx, &mem_13972, 16, "mem_13972");
+        
+        int32_t discard_13438;
+        int32_t scanacc_13432 = 0;
+        
+        for (int32_t i_13435 = 0; i_13435 < 4; i_13435++) {
+            bool not_arg_12985 = i_13435 == 0;
+            bool res_12986 = !not_arg_12985;
+            int32_t part_res_12987;
+            
+            if (res_12986) {
+                part_res_12987 = 0;
+            } else {
+                part_res_12987 = 1;
+            }
+            
+            int32_t part_res_12988;
+            
+            if (res_12986) {
+                part_res_12988 = 1;
+            } else {
+                part_res_12988 = 0;
+            }
+            
+            int32_t zz_12983 = part_res_12988 + scanacc_13432;
+            
+            *(int32_t *) &mem_13969.mem[i_13435 * 4] = zz_12983;
+            *(int32_t *) &mem_13972.mem[i_13435 * 4] = part_res_12987;
+            
+            int32_t scanacc_tmp_14206 = zz_12983;
+            
+            scanacc_13432 = scanacc_tmp_14206;
+        }
+        discard_13438 = scanacc_13432;
+        
+        int32_t last_offset_12989 = *(int32_t *) &mem_13969.mem[12];
+        int64_t binop_x_13982 = sext_i32_i64(last_offset_12989);
+        int64_t bytes_13981 = 4 * binop_x_13982;
+        struct memblock mem_13983;
+        
+        mem_13983.references = NULL;
+        memblock_alloc(ctx, &mem_13983, bytes_13981, "mem_13983");
+        
+        struct memblock mem_13986;
+        
+        mem_13986.references = NULL;
+        memblock_alloc(ctx, &mem_13986, bytes_13981, "mem_13986");
+        
+        struct memblock mem_13989;
+        
+        mem_13989.references = NULL;
+        memblock_alloc(ctx, &mem_13989, bytes_13981, "mem_13989");
+        for (int32_t write_iter_13439 = 0; write_iter_13439 < 4;
+             write_iter_13439++) {
+            int32_t write_iv_13443 =
+                    *(int32_t *) &mem_13972.mem[write_iter_13439 * 4];
+            int32_t write_iv_13444 =
+                    *(int32_t *) &mem_13969.mem[write_iter_13439 * 4];
+            int32_t new_index_13638 = squot32(write_iter_13439, 2);
+            int32_t binop_y_13640 = 2 * new_index_13638;
+            int32_t new_index_13641 = write_iter_13439 - binop_y_13640;
+            int32_t write_iv_13445 =
+                    *(int32_t *) &mem_13959.mem[(new_index_13638 * 2 +
+                                                 new_index_13641) * 4];
+            bool is_this_one_13001 = write_iv_13443 == 0;
+            int32_t this_offset_13002 = -1 + write_iv_13444;
+            int32_t total_res_13003;
+            
+            if (is_this_one_13001) {
+                total_res_13003 = this_offset_13002;
+            } else {
+                total_res_13003 = -1;
+            }
+            
+            bool less_than_zzero_13448 = slt32(total_res_13003, 0);
+            bool greater_than_sizze_13449 = sle32(last_offset_12989,
+                                                  total_res_13003);
+            bool outside_bounds_dim_13450 = less_than_zzero_13448 ||
+                 greater_than_sizze_13449;
+            
+            if (!outside_bounds_dim_13450) {
+                *(int32_t *) &mem_13983.mem[total_res_13003 * 4] =
+                    write_iv_13445;
+            }
+            if (!outside_bounds_dim_13450) {
+                *(int32_t *) &mem_13986.mem[total_res_13003 * 4] =
+                    new_index_13641;
+            }
+            if (!outside_bounds_dim_13450) {
+                *(int32_t *) &mem_13989.mem[total_res_13003 * 4] =
+                    write_iter_13439;
+            }
+        }
+        memblock_unref(ctx, &mem_13959, "mem_13959");
+        memblock_unref(ctx, &mem_13969, "mem_13969");
+        memblock_unref(ctx, &mem_13972, "mem_13972");
+        
+        int32_t x_13004 = abs(last_offset_12989);
+        bool empty_slice_13005 = x_13004 == 0;
+        int32_t m_13006 = x_13004 - 1;
+        bool zzero_leq_i_p_m_t_s_13007 = sle32(0, m_13006);
+        bool i_p_m_t_s_leq_w_13008 = slt32(m_13006, last_offset_12989);
+        bool y_13009 = zzero_leq_i_p_m_t_s_13007 && i_p_m_t_s_leq_w_13008;
+        bool ok_or_empty_13010 = empty_slice_13005 || y_13009;
+        bool index_certs_13011;
+        
+        if (!ok_or_empty_13010) {
+            ctx->error = msgprintf("Error at %s:\n%s%s%s%d%s%d%s\n",
+                                   "tupleTest.fut:75:1-77:24 -> tupleTest.fut:76:65-76:69 -> tupleTest.fut:57:13-57:29 -> tupleSparse.fut:23:18-23:61 -> /futlib/soacs.fut:135:6-135:16",
+                                   "Index [", "", ":", last_offset_12989,
+                                   "] out of bounds for array of shape [",
+                                   last_offset_12989, "].");
+            memblock_unref(ctx, &mem_13989, "mem_13989");
+            memblock_unref(ctx, &mem_13986, "mem_13986");
+            memblock_unref(ctx, &mem_13983, "mem_13983");
+            memblock_unref(ctx, &mem_13972, "mem_13972");
+            memblock_unref(ctx, &mem_13969, "mem_13969");
+            memblock_unref(ctx, &mem_13964, "mem_13964");
+            memblock_unref(ctx, &mem_13959, "mem_13959");
+            memblock_unref(ctx, &mem_13956, "mem_13956");
+            memblock_unref(ctx, &mem_13953, "mem_13953");
+            memblock_unref(ctx, &mem_13862, "mem_13862");
+            memblock_unref(ctx, &mem_13748, "mem_13748");
+            memblock_unref(ctx, &mem_13745, "mem_13745");
+            memblock_unref(ctx, &mem_13742, "mem_13742");
+            memblock_unref(ctx, &mem_13739, "mem_13739");
+            memblock_unref(ctx, &mem_13736, "mem_13736");
+            memblock_unref(ctx, &mem_13715, "mem_13715");
+            memblock_unref(ctx, &mem_13712, "mem_13712");
+            memblock_unref(ctx, &mem_13709, "mem_13709");
+            memblock_unref(ctx, &mem_13702, "mem_13702");
+            memblock_unref(ctx, &mem_13697, "mem_13697");
+            memblock_unref(ctx, &mem_13692, "mem_13692");
+            memblock_unref(ctx, &mem_13689, "mem_13689");
+            return 1;
+        }
+        
+        struct memblock mem_14010;
+        
+        mem_14010.references = NULL;
+        memblock_alloc(ctx, &mem_14010, 4, "mem_14010");
+        for (int32_t i_14212 = 0; i_14212 < 1; i_14212++) {
+            *(int32_t *) &mem_14010.mem[i_14212 * 4] = 0;
+        }
+        
+        struct memblock mem_14013;
+        
+        mem_14013.references = NULL;
+        memblock_alloc(ctx, &mem_14013, 4, "mem_14013");
+        for (int32_t i_14213 = 0; i_14213 < 1; i_14213++) {
+            *(int32_t *) &mem_14013.mem[i_14213 * 4] = 4;
+        }
+        
+        int32_t conc_tmp_13018 = 1 + x_13004;
+        int32_t res_13019;
+        int32_t redout_13466 = x_13004;
+        
+        for (int32_t i_13467 = 0; i_13467 < x_13004; i_13467++) {
+            int32_t x_13023 = *(int32_t *) &mem_13983.mem[i_13467 * 4];
+            int32_t x_13024 = *(int32_t *) &mem_13986.mem[i_13467 * 4];
+            bool cond_13026 = x_13023 == 0;
+            bool cond_13027 = x_13024 == 0;
+            bool eq_13028 = cond_13026 && cond_13027;
+            int32_t res_13029;
+            
+            if (eq_13028) {
+                res_13029 = i_13467;
+            } else {
+                res_13029 = x_13004;
+            }
+            
+            int32_t res_13022 = smin32(res_13029, redout_13466);
+            int32_t redout_tmp_14214 = res_13022;
+            
+            redout_13466 = redout_tmp_14214;
+        }
+        res_13019 = redout_13466;
+        
+        bool cond_13030 = res_13019 == x_13004;
+        int32_t res_13031;
+        
+        if (cond_13030) {
+            res_13031 = -1;
+        } else {
+            res_13031 = res_13019;
+        }
+        
+        bool eq_x_zz_13032 = -1 == res_13019;
+        bool not_p_13033 = !cond_13030;
+        bool p_and_eq_x_y_13034 = eq_x_zz_13032 && not_p_13033;
+        bool cond_13035 = cond_13030 || p_and_eq_x_y_13034;
+        bool cond_13036 = !cond_13035;
+        int32_t sizze_13037;
+        
+        if (cond_13036) {
+            sizze_13037 = x_13004;
+        } else {
+            sizze_13037 = conc_tmp_13018;
+        }
+        
+        int64_t binop_x_14015 = sext_i32_i64(x_13004);
+        int64_t bytes_14014 = 4 * binop_x_14015;
+        int64_t binop_x_14020 = sext_i32_i64(sizze_13037);
+        int64_t bytes_14019 = 4 * binop_x_14020;
+        int64_t binop_x_14028 = sext_i32_i64(conc_tmp_13018);
+        int64_t bytes_14027 = 4 * binop_x_14028;
+        int64_t res_mem_sizze_14036;
+        struct memblock res_mem_14037;
+        
+        res_mem_14037.references = NULL;
+        
+        int64_t res_mem_sizze_14038;
+        struct memblock res_mem_14039;
+        
+        res_mem_14039.references = NULL;
+        
+        int64_t res_mem_sizze_14040;
+        struct memblock res_mem_14041;
+        
+        res_mem_14041.references = NULL;
+        if (cond_13036) {
+            struct memblock mem_14016;
+            
+            mem_14016.references = NULL;
+            memblock_alloc(ctx, &mem_14016, bytes_14014, "mem_14016");
+            memmove(mem_14016.mem + 0, mem_13989.mem + 0, x_13004 *
+                    sizeof(int32_t));
+            
+            bool less_than_zzero_13470 = slt32(res_13031, 0);
+            bool greater_than_sizze_13471 = sle32(x_13004, res_13031);
+            bool outside_bounds_dim_13472 = less_than_zzero_13470 ||
+                 greater_than_sizze_13471;
+            
+            if (!outside_bounds_dim_13472) {
+                *(int32_t *) &mem_14016.mem[res_13031 * 4] = 4;
+            }
+            
+            struct memblock mem_14021;
+            
+            mem_14021.references = NULL;
+            memblock_alloc(ctx, &mem_14021, bytes_14019, "mem_14021");
+            memmove(mem_14021.mem + 0, mem_13983.mem + 0, sizze_13037 *
+                    sizeof(int32_t));
+            
+            struct memblock mem_14025;
+            
+            mem_14025.references = NULL;
+            memblock_alloc(ctx, &mem_14025, bytes_14019, "mem_14025");
+            memmove(mem_14025.mem + 0, mem_13986.mem + 0, sizze_13037 *
+                    sizeof(int32_t));
+            res_mem_sizze_14036 = bytes_14019;
+            memblock_set(ctx, &res_mem_14037, &mem_14021, "mem_14021");
+            res_mem_sizze_14038 = bytes_14019;
+            memblock_set(ctx, &res_mem_14039, &mem_14025, "mem_14025");
+            res_mem_sizze_14040 = bytes_14014;
+            memblock_set(ctx, &res_mem_14041, &mem_14016, "mem_14016");
+            memblock_unref(ctx, &mem_14025, "mem_14025");
+            memblock_unref(ctx, &mem_14021, "mem_14021");
+            memblock_unref(ctx, &mem_14016, "mem_14016");
+        } else {
+            struct memblock mem_14029;
+            
+            mem_14029.references = NULL;
+            memblock_alloc(ctx, &mem_14029, bytes_14027, "mem_14029");
+            
+            int32_t tmp_offs_14215 = 0;
+            
+            memmove(mem_14029.mem + tmp_offs_14215 * 4, mem_13983.mem + 0,
+                    x_13004 * sizeof(int32_t));
+            tmp_offs_14215 += x_13004;
+            memmove(mem_14029.mem + tmp_offs_14215 * 4, mem_14010.mem + 0,
+                    sizeof(int32_t));
+            tmp_offs_14215 += 1;
+            
+            struct memblock mem_14032;
+            
+            mem_14032.references = NULL;
+            memblock_alloc(ctx, &mem_14032, bytes_14027, "mem_14032");
+            
+            int32_t tmp_offs_14216 = 0;
+            
+            memmove(mem_14032.mem + tmp_offs_14216 * 4, mem_13986.mem + 0,
+                    x_13004 * sizeof(int32_t));
+            tmp_offs_14216 += x_13004;
+            memmove(mem_14032.mem + tmp_offs_14216 * 4, mem_14010.mem + 0,
+                    sizeof(int32_t));
+            tmp_offs_14216 += 1;
+            
+            struct memblock mem_14035;
+            
+            mem_14035.references = NULL;
+            memblock_alloc(ctx, &mem_14035, bytes_14027, "mem_14035");
+            
+            int32_t tmp_offs_14217 = 0;
+            
+            memmove(mem_14035.mem + tmp_offs_14217 * 4, mem_13989.mem + 0,
+                    x_13004 * sizeof(int32_t));
+            tmp_offs_14217 += x_13004;
+            memmove(mem_14035.mem + tmp_offs_14217 * 4, mem_14013.mem + 0,
+                    sizeof(int32_t));
+            tmp_offs_14217 += 1;
+            res_mem_sizze_14036 = bytes_14027;
+            memblock_set(ctx, &res_mem_14037, &mem_14029, "mem_14029");
+            res_mem_sizze_14038 = bytes_14027;
+            memblock_set(ctx, &res_mem_14039, &mem_14032, "mem_14032");
+            res_mem_sizze_14040 = bytes_14027;
+            memblock_set(ctx, &res_mem_14041, &mem_14035, "mem_14035");
+            memblock_unref(ctx, &mem_14035, "mem_14035");
+            memblock_unref(ctx, &mem_14032, "mem_14032");
+            memblock_unref(ctx, &mem_14029, "mem_14029");
+        }
+        memblock_unref(ctx, &mem_13983, "mem_13983");
+        memblock_unref(ctx, &mem_13986, "mem_13986");
+        memblock_unref(ctx, &mem_13989, "mem_13989");
+        memblock_unref(ctx, &mem_14010, "mem_14010");
+        memblock_unref(ctx, &mem_14013, "mem_14013");
+        
+        bool eq_x_y_13052 = 0 == x_13004;
+        bool p_and_eq_x_y_13053 = cond_13036 && eq_x_y_13052;
+        bool both_empty_13054 = p_and_eq_x_y_13053 && p_and_eq_x_y_13053;
+        bool p_and_eq_x_y_13055 = cond_13036 && cond_13036;
+        bool p_and_eq_x_y_13056 = cond_13035 && cond_13035;
+        bool dim_match_13057 = p_and_eq_x_y_13055 || p_and_eq_x_y_13056;
+        bool empty_or_match_13058 = both_empty_13054 || dim_match_13057;
+        bool empty_or_match_cert_13059;
+        
+        if (!empty_or_match_13058) {
+            ctx->error = msgprintf("Error at %s:\n%s%s\n",
+                                   "tupleTest.fut:75:1-77:24 -> tupleTest.fut:76:65-76:69 -> tupleTest.fut:58:13-58:34 -> tupleSparse.fut:47:1-54:76",
+                                   "Function return value does not match shape of type ",
+                                   "matrix");
+            memblock_unref(ctx, &res_mem_14041, "res_mem_14041");
+            memblock_unref(ctx, &res_mem_14039, "res_mem_14039");
+            memblock_unref(ctx, &res_mem_14037, "res_mem_14037");
+            memblock_unref(ctx, &mem_14013, "mem_14013");
+            memblock_unref(ctx, &mem_14010, "mem_14010");
+            memblock_unref(ctx, &mem_13989, "mem_13989");
+            memblock_unref(ctx, &mem_13986, "mem_13986");
+            memblock_unref(ctx, &mem_13983, "mem_13983");
+            memblock_unref(ctx, &mem_13972, "mem_13972");
+            memblock_unref(ctx, &mem_13969, "mem_13969");
+            memblock_unref(ctx, &mem_13964, "mem_13964");
+            memblock_unref(ctx, &mem_13959, "mem_13959");
+            memblock_unref(ctx, &mem_13956, "mem_13956");
+            memblock_unref(ctx, &mem_13953, "mem_13953");
+            memblock_unref(ctx, &mem_13862, "mem_13862");
+            memblock_unref(ctx, &mem_13748, "mem_13748");
+            memblock_unref(ctx, &mem_13745, "mem_13745");
+            memblock_unref(ctx, &mem_13742, "mem_13742");
+            memblock_unref(ctx, &mem_13739, "mem_13739");
+            memblock_unref(ctx, &mem_13736, "mem_13736");
+            memblock_unref(ctx, &mem_13715, "mem_13715");
+            memblock_unref(ctx, &mem_13712, "mem_13712");
+            memblock_unref(ctx, &mem_13709, "mem_13709");
+            memblock_unref(ctx, &mem_13702, "mem_13702");
+            memblock_unref(ctx, &mem_13697, "mem_13697");
+            memblock_unref(ctx, &mem_13692, "mem_13692");
+            memblock_unref(ctx, &mem_13689, "mem_13689");
+            return 1;
+        }
+        
+        bool eq_x_y_13060 = 4 == x_13004;
+        bool eq_x_zz_13061 = 4 == conc_tmp_13018;
+        bool p_and_eq_x_y_13062 = cond_13036 && eq_x_y_13060;
+        bool p_and_eq_x_y_13063 = cond_13035 && eq_x_zz_13061;
+        bool dim_eq_13064 = p_and_eq_x_y_13062 || p_and_eq_x_y_13063;
+        bool arrays_equal_13065;
+        
+        if (dim_eq_13064) {
+            bool all_equal_13067;
+            bool redout_13476 = 1;
+            
+            for (int32_t i_13477 = 0; i_13477 < sizze_13037; i_13477++) {
+                int32_t x_13071 = *(int32_t *) &res_mem_14041.mem[i_13477 * 4];
+                int32_t y_13072 = *(int32_t *) &mem_13689.mem[i_13477 * 4];
+                bool res_13073 = x_13071 == y_13072;
+                bool res_13070 = res_13073 && redout_13476;
+                bool redout_tmp_14218 = res_13070;
+                
+                redout_13476 = redout_tmp_14218;
+            }
+            all_equal_13067 = redout_13476;
+            arrays_equal_13065 = all_equal_13067;
+        } else {
+            arrays_equal_13065 = 0;
+        }
+        memblock_unref(ctx, &res_mem_14041, "res_mem_14041");
+        
+        bool res_13074;
+        
+        if (arrays_equal_13065) {
+            bool arrays_equal_13075;
+            
+            if (dim_eq_13064) {
+                bool all_equal_13077;
+                bool redout_13478 = 1;
+                
+                for (int32_t i_13479 = 0; i_13479 < sizze_13037; i_13479++) {
+                    int32_t x_13081 = *(int32_t *) &res_mem_14037.mem[i_13479 *
+                                                                      4];
+                    int32_t y_13082 = *(int32_t *) &mem_13953.mem[i_13479 * 4];
+                    bool res_13083 = x_13081 == y_13082;
+                    bool res_13080 = res_13083 && redout_13478;
+                    bool redout_tmp_14219 = res_13080;
+                    
+                    redout_13478 = redout_tmp_14219;
+                }
+                all_equal_13077 = redout_13478;
+                arrays_equal_13075 = all_equal_13077;
+            } else {
+                arrays_equal_13075 = 0;
+            }
+            
+            bool arrays_equal_13084;
+            
+            if (dim_eq_13064) {
+                bool all_equal_13086;
+                bool redout_13480 = 1;
+                
+                for (int32_t i_13481 = 0; i_13481 < sizze_13037; i_13481++) {
+                    int32_t x_13090 = *(int32_t *) &res_mem_14039.mem[i_13481 *
+                                                                      4];
+                    int32_t y_13091 = *(int32_t *) &mem_13956.mem[i_13481 * 4];
+                    bool res_13092 = x_13090 == y_13091;
+                    bool res_13089 = res_13092 && redout_13480;
+                    bool redout_tmp_14220 = res_13089;
+                    
+                    redout_13480 = redout_tmp_14220;
+                }
+                all_equal_13086 = redout_13480;
+                arrays_equal_13084 = all_equal_13086;
+            } else {
+                arrays_equal_13084 = 0;
+            }
+            
+            bool eq_13093 = arrays_equal_13075 && arrays_equal_13084;
+            
+            res_13074 = eq_13093;
+        } else {
+            res_13074 = 0;
+        }
+        memblock_unref(ctx, &res_mem_14037, "res_mem_14037");
+        memblock_unref(ctx, &res_mem_14039, "res_mem_14039");
+        res_12974 = res_13074;
+        memblock_unref(ctx, &res_mem_14041, "res_mem_14041");
+        memblock_unref(ctx, &res_mem_14039, "res_mem_14039");
+        memblock_unref(ctx, &res_mem_14037, "res_mem_14037");
+        memblock_unref(ctx, &mem_14013, "mem_14013");
+        memblock_unref(ctx, &mem_14010, "mem_14010");
+        memblock_unref(ctx, &mem_13989, "mem_13989");
+        memblock_unref(ctx, &mem_13986, "mem_13986");
+        memblock_unref(ctx, &mem_13983, "mem_13983");
+        memblock_unref(ctx, &mem_13972, "mem_13972");
+        memblock_unref(ctx, &mem_13969, "mem_13969");
+        memblock_unref(ctx, &mem_13964, "mem_13964");
+        memblock_unref(ctx, &mem_13959, "mem_13959");
+    } else {
+        res_12974 = 0;
+    }
+    memblock_unref(ctx, &mem_13689, "mem_13689");
+    memblock_unref(ctx, &mem_13953, "mem_13953");
+    memblock_unref(ctx, &mem_13956, "mem_13956");
+    
+    bool cond_13094;
+    
+    if (res_12974) {
+        struct memblock mem_14044;
+        
+        mem_14044.references = NULL;
+        memblock_alloc(ctx, &mem_14044, 16, "mem_14044");
+        
+        struct memblock mem_14049;
+        
+        mem_14049.references = NULL;
+        memblock_alloc(ctx, &mem_14049, 8, "mem_14049");
+        for (int32_t i_13484 = 0; i_13484 < 2; i_13484++) {
+            for (int32_t i_14222 = 0; i_14222 < 2; i_14222++) {
+                *(int32_t *) &mem_14049.mem[i_14222 * 4] = i_13484;
+            }
+            memmove(mem_14044.mem + 2 * i_13484 * 4, mem_14049.mem + 0, 2 *
+                    sizeof(int32_t));
+        }
+        memblock_unref(ctx, &mem_14049, "mem_14049");
+        
+        struct memblock mem_14054;
+        
+        mem_14054.references = NULL;
+        memblock_alloc(ctx, &mem_14054, 16, "mem_14054");
+        
+        struct memblock mem_14057;
+        
+        mem_14057.references = NULL;
+        memblock_alloc(ctx, &mem_14057, 16, "mem_14057");
+        
+        int32_t discard_13494;
+        int32_t scanacc_13488 = 0;
+        
+        for (int32_t i_13491 = 0; i_13491 < 4; i_13491++) {
+            bool not_arg_13105 = i_13491 == 0;
+            bool res_13106 = !not_arg_13105;
+            int32_t part_res_13107;
+            
+            if (res_13106) {
+                part_res_13107 = 0;
+            } else {
+                part_res_13107 = 1;
+            }
+            
+            int32_t part_res_13108;
+            
+            if (res_13106) {
+                part_res_13108 = 1;
+            } else {
+                part_res_13108 = 0;
+            }
+            
+            int32_t zz_13103 = part_res_13108 + scanacc_13488;
+            
+            *(int32_t *) &mem_14054.mem[i_13491 * 4] = zz_13103;
+            *(int32_t *) &mem_14057.mem[i_13491 * 4] = part_res_13107;
+            
+            int32_t scanacc_tmp_14223 = zz_13103;
+            
+            scanacc_13488 = scanacc_tmp_14223;
+        }
+        discard_13494 = scanacc_13488;
+        
+        int32_t last_offset_13109 = *(int32_t *) &mem_14054.mem[12];
+        int64_t binop_x_14067 = sext_i32_i64(last_offset_13109);
+        int64_t bytes_14066 = 4 * binop_x_14067;
+        struct memblock mem_14068;
+        
+        mem_14068.references = NULL;
+        memblock_alloc(ctx, &mem_14068, bytes_14066, "mem_14068");
+        
+        struct memblock mem_14071;
+        
+        mem_14071.references = NULL;
+        memblock_alloc(ctx, &mem_14071, bytes_14066, "mem_14071");
+        
+        struct memblock mem_14074;
+        
+        mem_14074.references = NULL;
+        memblock_alloc(ctx, &mem_14074, bytes_14066, "mem_14074");
+        for (int32_t write_iter_13495 = 0; write_iter_13495 < 4;
+             write_iter_13495++) {
+            int32_t write_iv_13499 =
+                    *(int32_t *) &mem_14057.mem[write_iter_13495 * 4];
+            int32_t write_iv_13500 =
+                    *(int32_t *) &mem_14054.mem[write_iter_13495 * 4];
+            int32_t new_index_13655 = squot32(write_iter_13495, 2);
+            int32_t binop_y_13657 = 2 * new_index_13655;
+            int32_t new_index_13658 = write_iter_13495 - binop_y_13657;
+            int32_t write_iv_13501 =
+                    *(int32_t *) &mem_14044.mem[(new_index_13655 * 2 +
+                                                 new_index_13658) * 4];
+            bool is_this_one_13121 = write_iv_13499 == 0;
+            int32_t this_offset_13122 = -1 + write_iv_13500;
+            int32_t total_res_13123;
+            
+            if (is_this_one_13121) {
+                total_res_13123 = this_offset_13122;
+            } else {
+                total_res_13123 = -1;
+            }
+            
+            bool less_than_zzero_13504 = slt32(total_res_13123, 0);
+            bool greater_than_sizze_13505 = sle32(last_offset_13109,
+                                                  total_res_13123);
+            bool outside_bounds_dim_13506 = less_than_zzero_13504 ||
+                 greater_than_sizze_13505;
+            
+            if (!outside_bounds_dim_13506) {
+                *(int32_t *) &mem_14068.mem[total_res_13123 * 4] =
+                    write_iv_13501;
+            }
+            if (!outside_bounds_dim_13506) {
+                *(int32_t *) &mem_14071.mem[total_res_13123 * 4] =
+                    new_index_13658;
+            }
+            if (!outside_bounds_dim_13506) {
+                *(int32_t *) &mem_14074.mem[total_res_13123 * 4] =
+                    write_iter_13495;
+            }
+        }
+        memblock_unref(ctx, &mem_14044, "mem_14044");
+        memblock_unref(ctx, &mem_14054, "mem_14054");
+        memblock_unref(ctx, &mem_14057, "mem_14057");
+        
+        int32_t x_13124 = abs(last_offset_13109);
+        bool empty_slice_13125 = x_13124 == 0;
+        int32_t m_13126 = x_13124 - 1;
+        bool zzero_leq_i_p_m_t_s_13127 = sle32(0, m_13126);
+        bool i_p_m_t_s_leq_w_13128 = slt32(m_13126, last_offset_13109);
+        bool y_13129 = zzero_leq_i_p_m_t_s_13127 && i_p_m_t_s_leq_w_13128;
+        bool ok_or_empty_13130 = empty_slice_13125 || y_13129;
+        bool index_certs_13131;
+        
+        if (!ok_or_empty_13130) {
+            ctx->error = msgprintf("Error at %s:\n%s%s%s%d%s%d%s\n",
+                                   "tupleTest.fut:75:1-77:24 -> tupleTest.fut:77:11-77:15 -> tupleTest.fut:64:13-64:29 -> tupleSparse.fut:23:18-23:61 -> /futlib/soacs.fut:135:6-135:16",
+                                   "Index [", "", ":", last_offset_13109,
+                                   "] out of bounds for array of shape [",
+                                   last_offset_13109, "].");
+            memblock_unref(ctx, &mem_14074, "mem_14074");
+            memblock_unref(ctx, &mem_14071, "mem_14071");
+            memblock_unref(ctx, &mem_14068, "mem_14068");
+            memblock_unref(ctx, &mem_14057, "mem_14057");
+            memblock_unref(ctx, &mem_14054, "mem_14054");
+            memblock_unref(ctx, &mem_14049, "mem_14049");
+            memblock_unref(ctx, &mem_14044, "mem_14044");
+            memblock_unref(ctx, &mem_13956, "mem_13956");
+            memblock_unref(ctx, &mem_13953, "mem_13953");
+            memblock_unref(ctx, &mem_13862, "mem_13862");
+            memblock_unref(ctx, &mem_13748, "mem_13748");
+            memblock_unref(ctx, &mem_13745, "mem_13745");
+            memblock_unref(ctx, &mem_13742, "mem_13742");
+            memblock_unref(ctx, &mem_13739, "mem_13739");
+            memblock_unref(ctx, &mem_13736, "mem_13736");
+            memblock_unref(ctx, &mem_13715, "mem_13715");
+            memblock_unref(ctx, &mem_13712, "mem_13712");
+            memblock_unref(ctx, &mem_13709, "mem_13709");
+            memblock_unref(ctx, &mem_13702, "mem_13702");
+            memblock_unref(ctx, &mem_13697, "mem_13697");
+            memblock_unref(ctx, &mem_13692, "mem_13692");
+            memblock_unref(ctx, &mem_13689, "mem_13689");
+            return 1;
+        }
+        
+        int32_t res_13135;
+        int32_t redout_13522 = x_13124;
+        
+        for (int32_t i_13523 = 0; i_13523 < x_13124; i_13523++) {
+            int32_t x_13139 = *(int32_t *) &mem_14068.mem[i_13523 * 4];
+            int32_t x_13140 = *(int32_t *) &mem_14071.mem[i_13523 * 4];
+            bool cond_13142 = x_13139 == 2;
+            bool cond_13143 = x_13140 == 3;
+            bool eq_13144 = cond_13142 && cond_13143;
+            int32_t res_13145;
+            
+            if (eq_13144) {
+                res_13145 = i_13523;
+            } else {
+                res_13145 = x_13124;
+            }
+            
+            int32_t res_13138 = smin32(res_13145, redout_13522);
+            int32_t redout_tmp_14229 = res_13138;
+            
+            redout_13522 = redout_tmp_14229;
+        }
+        res_13135 = redout_13522;
+        memblock_unref(ctx, &mem_14068, "mem_14068");
+        memblock_unref(ctx, &mem_14071, "mem_14071");
+        
+        bool cond_13146 = res_13135 == x_13124;
+        int32_t res_13147;
+        
+        if (cond_13146) {
+            res_13147 = -1;
+        } else {
+            res_13147 = res_13135;
+        }
+        
+        bool eq_x_zz_13148 = -1 == res_13135;
+        bool not_p_13149 = !cond_13146;
+        bool p_and_eq_x_y_13150 = eq_x_zz_13148 && not_p_13149;
+        bool cond_13151 = cond_13146 || p_and_eq_x_y_13150;
+        int32_t res_13152;
+        
+        if (cond_13151) {
+            res_13152 = 0;
+        } else {
+            int32_t res_13153 = *(int32_t *) &mem_14074.mem[res_13147 * 4];
+            
+            res_13152 = res_13153;
+        }
+        memblock_unref(ctx, &mem_14074, "mem_14074");
+        
+        bool res_13154 = res_13152 == 0;
+        
+        cond_13094 = res_13154;
+        memblock_unref(ctx, &mem_14074, "mem_14074");
+        memblock_unref(ctx, &mem_14071, "mem_14071");
+        memblock_unref(ctx, &mem_14068, "mem_14068");
+        memblock_unref(ctx, &mem_14057, "mem_14057");
+        memblock_unref(ctx, &mem_14054, "mem_14054");
+        memblock_unref(ctx, &mem_14049, "mem_14049");
+        memblock_unref(ctx, &mem_14044, "mem_14044");
+    } else {
+        cond_13094 = 0;
+    }
+    
+    bool res_13155;
+    
+    if (cond_13094) {
+        struct memblock mem_14095;
+        
+        mem_14095.references = NULL;
+        memblock_alloc(ctx, &mem_14095, 16, "mem_14095");
+        
+        struct memblock mem_14100;
+        
+        mem_14100.references = NULL;
+        memblock_alloc(ctx, &mem_14100, 8, "mem_14100");
+        for (int32_t i_13526 = 0; i_13526 < 2; i_13526++) {
+            for (int32_t i_14231 = 0; i_14231 < 2; i_14231++) {
+                *(int32_t *) &mem_14100.mem[i_14231 * 4] = i_13526;
+            }
+            memmove(mem_14095.mem + 2 * i_13526 * 4, mem_14100.mem + 0, 2 *
+                    sizeof(int32_t));
+        }
+        memblock_unref(ctx, &mem_14100, "mem_14100");
+        
+        struct memblock mem_14105;
+        
+        mem_14105.references = NULL;
+        memblock_alloc(ctx, &mem_14105, 16, "mem_14105");
+        
+        struct memblock mem_14108;
+        
+        mem_14108.references = NULL;
+        memblock_alloc(ctx, &mem_14108, 16, "mem_14108");
+        
+        int32_t discard_13536;
+        int32_t scanacc_13530 = 0;
+        
+        for (int32_t i_13533 = 0; i_13533 < 4; i_13533++) {
+            bool not_arg_13166 = i_13533 == 0;
+            bool res_13167 = !not_arg_13166;
+            int32_t part_res_13168;
+            
+            if (res_13167) {
+                part_res_13168 = 0;
+            } else {
+                part_res_13168 = 1;
+            }
+            
+            int32_t part_res_13169;
+            
+            if (res_13167) {
+                part_res_13169 = 1;
+            } else {
+                part_res_13169 = 0;
+            }
+            
+            int32_t zz_13164 = part_res_13169 + scanacc_13530;
+            
+            *(int32_t *) &mem_14105.mem[i_13533 * 4] = zz_13164;
+            *(int32_t *) &mem_14108.mem[i_13533 * 4] = part_res_13168;
+            
+            int32_t scanacc_tmp_14232 = zz_13164;
+            
+            scanacc_13530 = scanacc_tmp_14232;
+        }
+        discard_13536 = scanacc_13530;
+        
+        int32_t last_offset_13170 = *(int32_t *) &mem_14105.mem[12];
+        int64_t binop_x_14118 = sext_i32_i64(last_offset_13170);
+        int64_t bytes_14117 = 4 * binop_x_14118;
+        struct memblock mem_14119;
+        
+        mem_14119.references = NULL;
+        memblock_alloc(ctx, &mem_14119, bytes_14117, "mem_14119");
+        
+        struct memblock mem_14122;
+        
+        mem_14122.references = NULL;
+        memblock_alloc(ctx, &mem_14122, bytes_14117, "mem_14122");
+        
+        struct memblock mem_14125;
+        
+        mem_14125.references = NULL;
+        memblock_alloc(ctx, &mem_14125, bytes_14117, "mem_14125");
+        for (int32_t write_iter_13537 = 0; write_iter_13537 < 4;
+             write_iter_13537++) {
+            int32_t write_iv_13541 =
+                    *(int32_t *) &mem_14108.mem[write_iter_13537 * 4];
+            int32_t write_iv_13542 =
+                    *(int32_t *) &mem_14105.mem[write_iter_13537 * 4];
+            int32_t new_index_13672 = squot32(write_iter_13537, 2);
+            int32_t binop_y_13674 = 2 * new_index_13672;
+            int32_t new_index_13675 = write_iter_13537 - binop_y_13674;
+            int32_t write_iv_13543 =
+                    *(int32_t *) &mem_14095.mem[(new_index_13672 * 2 +
+                                                 new_index_13675) * 4];
+            bool is_this_one_13182 = write_iv_13541 == 0;
+            int32_t this_offset_13183 = -1 + write_iv_13542;
+            int32_t total_res_13184;
+            
+            if (is_this_one_13182) {
+                total_res_13184 = this_offset_13183;
+            } else {
+                total_res_13184 = -1;
+            }
+            
+            bool less_than_zzero_13546 = slt32(total_res_13184, 0);
+            bool greater_than_sizze_13547 = sle32(last_offset_13170,
+                                                  total_res_13184);
+            bool outside_bounds_dim_13548 = less_than_zzero_13546 ||
+                 greater_than_sizze_13547;
+            
+            if (!outside_bounds_dim_13548) {
+                *(int32_t *) &mem_14119.mem[total_res_13184 * 4] =
+                    write_iv_13543;
+            }
+            if (!outside_bounds_dim_13548) {
+                *(int32_t *) &mem_14122.mem[total_res_13184 * 4] =
+                    new_index_13675;
+            }
+            if (!outside_bounds_dim_13548) {
+                *(int32_t *) &mem_14125.mem[total_res_13184 * 4] =
+                    write_iter_13537;
+            }
+        }
+        memblock_unref(ctx, &mem_14095, "mem_14095");
+        memblock_unref(ctx, &mem_14105, "mem_14105");
+        memblock_unref(ctx, &mem_14108, "mem_14108");
+        
+        int32_t x_13185 = abs(last_offset_13170);
+        bool empty_slice_13186 = x_13185 == 0;
+        int32_t m_13187 = x_13185 - 1;
+        bool zzero_leq_i_p_m_t_s_13188 = sle32(0, m_13187);
+        bool i_p_m_t_s_leq_w_13189 = slt32(m_13187, last_offset_13170);
+        bool y_13190 = zzero_leq_i_p_m_t_s_13188 && i_p_m_t_s_leq_w_13189;
+        bool ok_or_empty_13191 = empty_slice_13186 || y_13190;
+        bool index_certs_13192;
+        
+        if (!ok_or_empty_13191) {
+            ctx->error = msgprintf("Error at %s:\n%s%s%s%d%s%d%s\n",
+                                   "tupleTest.fut:75:1-77:24 -> tupleTest.fut:77:20-77:24 -> tupleTest.fut:71:13-71:29 -> tupleSparse.fut:23:18-23:61 -> /futlib/soacs.fut:135:6-135:16",
+                                   "Index [", "", ":", last_offset_13170,
+                                   "] out of bounds for array of shape [",
+                                   last_offset_13170, "].");
+            memblock_unref(ctx, &mem_14125, "mem_14125");
+            memblock_unref(ctx, &mem_14122, "mem_14122");
+            memblock_unref(ctx, &mem_14119, "mem_14119");
+            memblock_unref(ctx, &mem_14108, "mem_14108");
+            memblock_unref(ctx, &mem_14105, "mem_14105");
+            memblock_unref(ctx, &mem_14100, "mem_14100");
+            memblock_unref(ctx, &mem_14095, "mem_14095");
+            memblock_unref(ctx, &mem_13956, "mem_13956");
+            memblock_unref(ctx, &mem_13953, "mem_13953");
+            memblock_unref(ctx, &mem_13862, "mem_13862");
+            memblock_unref(ctx, &mem_13748, "mem_13748");
+            memblock_unref(ctx, &mem_13745, "mem_13745");
+            memblock_unref(ctx, &mem_13742, "mem_13742");
+            memblock_unref(ctx, &mem_13739, "mem_13739");
+            memblock_unref(ctx, &mem_13736, "mem_13736");
+            memblock_unref(ctx, &mem_13715, "mem_13715");
+            memblock_unref(ctx, &mem_13712, "mem_13712");
+            memblock_unref(ctx, &mem_13709, "mem_13709");
+            memblock_unref(ctx, &mem_13702, "mem_13702");
+            memblock_unref(ctx, &mem_13697, "mem_13697");
+            memblock_unref(ctx, &mem_13692, "mem_13692");
+            memblock_unref(ctx, &mem_13689, "mem_13689");
+            return 1;
+        }
+        
+        int32_t res_13196;
+        int32_t redout_13564 = x_13185;
+        
+        for (int32_t i_13565 = 0; i_13565 < x_13185; i_13565++) {
+            int32_t x_13200 = *(int32_t *) &mem_14119.mem[i_13565 * 4];
+            int32_t x_13201 = *(int32_t *) &mem_14122.mem[i_13565 * 4];
+            bool cond_13203 = x_13200 == 0;
+            bool cond_13204 = x_13201 == 1;
+            bool eq_13205 = cond_13203 && cond_13204;
+            int32_t res_13206;
+            
+            if (eq_13205) {
+                res_13206 = i_13565;
+            } else {
+                res_13206 = x_13185;
+            }
+            
+            int32_t res_13199 = smin32(res_13206, redout_13564);
+            int32_t redout_tmp_14238 = res_13199;
+            
+            redout_13564 = redout_tmp_14238;
+        }
+        res_13196 = redout_13564;
+        memblock_unref(ctx, &mem_14119, "mem_14119");
+        memblock_unref(ctx, &mem_14122, "mem_14122");
+        
+        bool cond_13207 = res_13196 == x_13185;
+        int32_t res_13208;
+        
+        if (cond_13207) {
+            res_13208 = -1;
+        } else {
+            res_13208 = res_13196;
+        }
+        
+        bool eq_x_zz_13209 = -1 == res_13196;
+        bool not_p_13210 = !cond_13207;
+        bool p_and_eq_x_y_13211 = eq_x_zz_13209 && not_p_13210;
+        bool cond_13212 = cond_13207 || p_and_eq_x_y_13211;
+        int32_t res_13213;
+        
+        if (cond_13212) {
+            res_13213 = 0;
+        } else {
+            int32_t res_13214 = *(int32_t *) &mem_14125.mem[res_13208 * 4];
+            
+            res_13213 = res_13214;
+        }
+        memblock_unref(ctx, &mem_14125, "mem_14125");
+        
+        bool res_13215 = res_13213 == 1;
+        
+        res_13155 = res_13215;
+        memblock_unref(ctx, &mem_14125, "mem_14125");
+        memblock_unref(ctx, &mem_14122, "mem_14122");
+        memblock_unref(ctx, &mem_14119, "mem_14119");
+        memblock_unref(ctx, &mem_14108, "mem_14108");
+        memblock_unref(ctx, &mem_14105, "mem_14105");
+        memblock_unref(ctx, &mem_14100, "mem_14100");
+        memblock_unref(ctx, &mem_14095, "mem_14095");
+    } else {
+        res_13155 = 0;
+    }
+    scalar_out_14144 = res_13155;
+    *out_scalar_out_14239 = scalar_out_14144;
+    memblock_unref(ctx, &mem_13956, "mem_13956");
+    memblock_unref(ctx, &mem_13953, "mem_13953");
+    memblock_unref(ctx, &mem_13862, "mem_13862");
+    memblock_unref(ctx, &mem_13748, "mem_13748");
+    memblock_unref(ctx, &mem_13745, "mem_13745");
+    memblock_unref(ctx, &mem_13742, "mem_13742");
+    memblock_unref(ctx, &mem_13739, "mem_13739");
+    memblock_unref(ctx, &mem_13736, "mem_13736");
+    memblock_unref(ctx, &mem_13715, "mem_13715");
+    memblock_unref(ctx, &mem_13712, "mem_13712");
+    memblock_unref(ctx, &mem_13709, "mem_13709");
+    memblock_unref(ctx, &mem_13702, "mem_13702");
+    memblock_unref(ctx, &mem_13697, "mem_13697");
+    memblock_unref(ctx, &mem_13692, "mem_13692");
+    memblock_unref(ctx, &mem_13689, "mem_13689");
     return 0;
 }
 int futhark_entry_main(struct futhark_context *ctx, bool *out0)
 {
-    bool scalar_out_11584;
+    bool scalar_out_14144;
     
     lock_lock(&ctx->lock);
     
-    int ret = futrts_main(ctx, &scalar_out_11584);
+    int ret = futrts_main(ctx, &scalar_out_14144);
     
     if (ret == 0) {
-        *out0 = scalar_out_11584;
+        *out0 = scalar_out_14144;
     }
     lock_unlock(&ctx->lock);
     return ret;

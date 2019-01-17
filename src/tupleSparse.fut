@@ -10,7 +10,6 @@ module type MonoidEq = {
 }
 
 module spCoord(M: MonoidEq) = {
-  --type mul = i8,i16,i32,i64,u8,u16,u32,u64,f32,f64
   type matrix = { Inds : [](i32,i32), Vals : []M.t, Dims : (i32,i32) }
 
 let fromList (dim : (i32,i32)) (l : []((i32,i32),M.t)) : matrix =
@@ -35,7 +34,7 @@ let toDense (mat : matrix) =
 let empty (dim : (i32,i32)) : matrix = {Inds = [], Vals=[], Dims=dim}
 
 
-let diag 'a (size :i32) (el : M.t) : matrix =
+let diag (size :i32) (el : M.t) : matrix =
   let (inds, vals) = unzip <| map (\i -> ((i,i),el)) (iota size)
   in {Inds = inds, Vals = vals, Dims= (size,size)}
 
