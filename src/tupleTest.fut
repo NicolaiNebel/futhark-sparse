@@ -72,6 +72,31 @@ let test8 =
   let res = coord.get mat 0 1
   in res==1
 
+--Transpose
+
+--Transpose twice
+
+--flatten
+
+--Map on empty
+
+--Map on full values
+
+--Map on part
+
+--elementwise with an empty matrix
+
+--elementwise with two full
+
+--elementwise with all mismatched values
+
+--multiplication with an empty matrix
+
+--multiplication with two full
+
+--multiplication with all mismatched values
+
+
 let main =
   let a = test0 && test1 && test2 && test3 && test4 && test5 && test6
   in a && test7 && test8
