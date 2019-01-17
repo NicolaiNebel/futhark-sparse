@@ -1,8 +1,14 @@
 import "lib/github.com/diku-dk/sorts/merge_sort"
 import "lib/github.com/diku-dk/segmented/segmented"
 import "futlib/math"
+module type MonoidEq = {
+  type t
+  val add: t -> t -> t
+  val eq: t -> t -> t
+  val zero: t
+}
 
-module coord = {
+module spCoord(M: MonoidEq = {
   --type mul = i8,i16,i32,i64,u8,u16,u32,u64,f32,f64
   type matrix 'a = { Inds : [](i32,i32), Vals : []a, Dims : (i32,i32) }
 
@@ -21,7 +27,7 @@ let fromDense 'a [m][n] (ne : a) (eq : a -> a -> bool) (dense : [m][n]a) =
 let toDense 'a (ne : a) (mat : matrix a) =
   let dim = mat.Dims
   let dense = replicate (dim.1*dim.2) ne
-  let inds = map (\(i,j) -> i+j*dim.1) mat.Inds
+  let inds = map (\(i,j) -> i*dim.2+j) mat.Inds
   let res = scatter dense inds mat.Vals
   in unflatten dim.1 dim.2 res
 
