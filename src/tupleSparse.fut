@@ -1,13 +1,8 @@
 import "lib/github.com/diku-dk/sorts/merge_sort"
 import "lib/github.com/diku-dk/segmented/segmented"
 import "futlib/math"
-module type MonoidEq = {
-  type t
-  val add: t -> t -> t
-  val eq: t -> t -> bool
-  val mul: t -> t -> t
-  val ne: t
-}
+
+import "MonoidEq"
 
 module spCoord(M: MonoidEq) = {
   type matrix = { Inds : [](i32,i32), Vals : []M.t, Dims : (i32,i32) }
