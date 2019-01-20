@@ -14,7 +14,7 @@ let find_idx_first [n] (e:i32)  (xs:[n]i32) : i32 =
     in if res == n then -1 else (res-1)
 
 let fromList (dims : (i32, i32)) (xs : []((i32,i32),elem)): matrix =
-  let xs = filter (\(_,x) -> !(M.eq x M.ne)) xs
+  let xs = filter (\(_,x) -> !(M.eq x M.zero)) xs
   let sorted_xs = merge_sort (\((x1,y1),_) ((x2,y2),_) -> if x1 == x2 then y1 <= y2 else x1 < x2) xs
   let (idxs, vals) = unzip sorted_xs
   let (rows, cols) = unzip idxs
@@ -32,14 +32,14 @@ let fromList (dims : (i32, i32)) (xs : []((i32,i32),elem)): matrix =
 let fromDense [n][m] (matrix: [n][m]elem): matrix =
   let idxs = replicate m (iota n) |> flatten |> zip (iota m)
   let idxs_mat = zip idxs <| flatten matrix
-  let entries = filter (\(_,x) -> !(M.eq M.ne x)) idxs_mat
+  let entries = filter (\(_,x) -> !(M.eq M.zero x)) idxs_mat
   in fromList (n,m) entries
 
 let empty (dim : (i32, i32)) : matrix = {row_ptr = [], vals=[], dims=dim, cols = []}
 
 let toDense (mat : matrix) : [][]M.t =
     let dim = mat.dims
-    let zeros = replicate (dim.1 * dim.2) M.ne
+    let zeros = replicate (dim.1 * dim.2) M.zero
     let new_ptr = mat.row_ptr ++ [length(mat.vals)+1]
 
     let inds = map(\x -> mat.cols[x] * find_idx_first x new_ptr) (iota dim.2)
@@ -48,7 +48,7 @@ let toDense (mat : matrix) : [][]M.t =
 
 let toList (mat : matrix) : []M.t =
     let dim = mat.dims
-    let zeros = replicate (dim.1 * dim.2) M.ne
+    let zeros = replicate (dim.1 * dim.2) M.zero
     let new_ptr = mat.row_ptr ++ [length(mat.vals)+1]
 
     let inds = map(\x -> mat.cols[x] + (find_idx_first x  new_ptr) * dim.2) (iota dim.2) -- fix
@@ -85,15 +85,18 @@ let mult_mat_vec (mat : matrix) (vec : []M.t) : []M.t  =
 	 let flags = map (>0) tmp
 	 -- could maybe remove that part
 
-         let segs = segmented_scan (M.add) M.ne flags multis
+         let segs = segmented_scan (M.add) M.zero flags multis
 	 let flag_1 = flags ++ [true]
 	 let newf = map(\x -> flag_1[x+1]) (iota (length(flags)))
 
 	 
 	 let (_,res) = unzip (filter (.1) <| zip newf segs)
          in res
-    else [M.ne] -- case the dims does not match
+    else [M.zero] -- case the dims does not match
 
+
+--let diag (size : i32) (i : M.t) : matrix =
+--  let (inds, vals) = 
 
 let mul (mat0 : matrix) (mat1 : matrix) : matrix =
     if mat0.dims.2 == mat1.dims.1
@@ -107,7 +110,6 @@ let mul (mat0 : matrix) (mat1 : matrix) : matrix =
     else empty (0, 0)
 
 
-let diag (size : i32) (i : M.t) : matrix =
 
 }
 

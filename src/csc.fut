@@ -13,9 +13,8 @@ module csc(M : MonoidEq) = {
                 , rows: []i32 }
 
   module dual = csr M
-  type dual_matrix = dual.matrix
 
-  let fromCsr (m : dual_matrix): matrix =
+  let fromCsr (m : dual.matrix): matrix =
     -- Grab the dimensions
     let (N,M) = m.dims
 
@@ -34,20 +33,11 @@ module csc(M : MonoidEq) = {
     let real_cols = zip cols flags |> filter (.2) |> map (.1)
     let col_lens: []i32 = segmented_reduce (+) 0 flags <| replicate (length flags) 1
     let all_col_lens: []i32 = scatter (replicate M 0) real_cols col_lens
-    let col_ptr: []i32 = scan (\a b -> a + b) 0 <| [0] ++ init all_col_lens
+    let col_ptr: []i32 = scan (+) 0 <| [0] ++ init all_col_lens
 
     let (vals, rows) = unzip sorted_by_col
 
     in { dims = (N,M), vals = vals, col_ptr = col_ptr, rows = rows }
-}
-
-module monoideq_i32 = {
-  type t = i32
-
-  let add:(i32 -> i32 -> i32) = (+)
-  let eq:(i32 -> i32 -> bool) = (==)
-  let mul:(i32 -> i32 -> i32) = (*)
-  let ne:i32                  = 0
 }
 
 module csr_i32 = csr(monoideq_i32)
