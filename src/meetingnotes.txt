@@ -1,0 +1,17 @@
+Generaliseret mul med functionerne i input ala elementwise men med både mul og add.
+
+Lav monoidEq til et subset af numeric - hiv nul ud med M.i8 0
+
+Skal vi have mapInner og mapOuter (inner = elementerne, outer= lister)
+
+Test diag gange med diag
+
+Filter = span(log n) work(n)
+
+Kan typerne sættes op så dimensionerne i mult altid vil passe sammen.
+
+matrix [x] [y] som type med dimensionerne i sig
+
+Mult som beholder sparse
+
+Elementwise skal filtreres efter 
