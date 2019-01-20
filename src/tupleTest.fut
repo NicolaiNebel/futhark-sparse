@@ -1,5 +1,5 @@
 import "tupleSparse"
-
+import "MonoidEq"
 -- MonoidEq with t=*type* is important to show the compiler the type to be compared with
 module intEq : (MonoidEq with t=i32) = {type t = i32
                                         let add = (+)
@@ -137,17 +137,34 @@ let test15 =
 --elementwise times with empty (should be empty)
 let test16 =
   let a = coord.empty 3 2
-  let b = coord.fromDense <| unflatten 3 2 <| iota 6
-  let res = coord.elementwise a b (*) 1
-  in res.Vals
+  let b = unflatten 3 2 <| iota 6
+  let mat = coord.fromDense b
+  let res = coord.elementwise a mat (*) 1
+  in res.Vals==mat.Vals
 
---elementwise with two full
+-- elementwise with two full
+let test17 =
+  let a = unflatten 3 2 <| iota 6
+  let mat = coord.fromDense a
+  let res = coord.elementwise mat mat (*) 1
+  let vals = res.Vals
+  in reduce (&&) true <| map (\i -> (i+1)**2==unsafe(vals[i])) <| iota 5
 
 --elementwise with all mismatched values
+let test18 =
+  let a = unflatten 2 2 <| map (\i -> if i%2==0 then 0 else 1) <| iota 4
+  let b = unflatten 2 2 <| map (\i -> if i%2==1 then 0 else 1) <| iota 4
+  let mata = coord.fromDense a
+  let matb = coord.fromDense b
+  let res = coord.elementwise mata matb (*) 1
+  in (length res.Vals==4) && (reduce (&&) true <| map (==1) res.Vals)
 
-
---Mult tests
---multiplication with an empty matrix
+--Mult testsmultiplication with an empty matrix
+let test19 =
+  let mat = coord.fromDense <| unflatten 3 2 <| iota 6
+  let b = coord.empty 2 3
+  let res = coord.mul mat b
+  in b.Vals==res.Vals && ((length res._x) == 3) && ((length res._y) == 3)
 
 --multiplication with two full
 
@@ -158,8 +175,8 @@ let main =
   let make = test0 && test1 && test2 && test3 && test4
   let up = test5 && test6 && test7 && test8
   let trans = test9 && test10 && test11
-  let flat = true
+  let list = true
   let maps = test12 && test13 && test14
-  --let elem = test15 && test16
-  let mult = true
-  in test16--make && up && trans && maps&& elem && mult && flat
+  let elem = test15 && test16 && test17 && test18
+  let mult = true --test19
+  in make && up && trans && maps&& elem && mult && list
