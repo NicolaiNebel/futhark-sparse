@@ -9,7 +9,7 @@ module csr (M : MonoidEq) = {
 
 -- assume row-major
 let fromList (dims : (i32, i32)) (xs : []((i32,i32),elem)): matrix =
-  let xs = filter (\(_,x) -> !(M.eq x M.ne)) xs
+  let xs = filter (\(_,x) -> !(M.eq x M.zero)) xs
   let sorted_xs = merge_sort (\((x1,y1),_) ((x2,y2),_) -> if x1 == x2 then y1 <= y2 else x1 < x2) xs
   let (idxs, vals) = unzip sorted_xs
   let (rows, cols) = unzip idxs
@@ -27,10 +27,6 @@ let fromList (dims : (i32, i32)) (xs : []((i32,i32),elem)): matrix =
 let fromDense [n][m] (matrix: [n][m]elem): matrix =
   let idxs = replicate m (iota n) |> flatten |> zip (iota m)
   let idxs_mat = zip idxs <| flatten matrix
-  let entries = filter (\(_,x) -> !(M.eq M.ne x)) idxs_mat
+  let entries = filter (\(_,x) -> !(M.eq M.zero x)) idxs_mat
   in fromList (n,m) entries
-
--- -- Only updates non-zero values of map
--- let matrix_map 'b (f: a -> b) (m: matrix a): matrix b =
---   { dims = m.dims, vals = map f m.vals, row_ptr = m.row_ptr, cols = m.cols }
 }
