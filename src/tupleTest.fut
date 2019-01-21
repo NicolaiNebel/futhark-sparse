@@ -165,7 +165,6 @@ let test19 =
   let b = coord.empty 2 3
   let res = coord.mul mat b
   in b.Vals==res.Vals && ((length res._x) == 3) && ((length res._y) == 3)
-
 --multiplication with two full
 
 --multiplication with all mismatched values
@@ -178,5 +177,5 @@ let main =
   let list = true
   let maps = test12 && test13 && test14
   let elem = test15 && test16 && test17 && test18
-  let mult = true --test19
+  let mult = test19
   in make && up && trans && maps&& elem && mult && list

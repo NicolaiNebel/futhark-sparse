@@ -194,20 +194,21 @@ let matMult (sort0 : []((i32,i32),M.t)) count0 (sort1 : []((i32,i32),M.t)) count
 
 let mulFun [x][y][z] (mat0 : matrix[x][y]) (mat1 : matrix[y][z]) (mul: M.t -> M.t -> M.t) (add: M.t -> M.t -> M.t) : matrix[x][z] =
   let sort0 = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if i0==i1 then j0<=j1 else i0 <= i1) (zip mat0.Inds mat0.Vals)
+  let ptr0 = let (inds,flag) = unzip <| map2 (\((ind0,_),_) ((ind1,_),_) -> (ind0,ind0!=ind1)) sort0 (rotate (-1) sort0)
+             let flagi = zip inds <| replicate (length flag) 0
+             let (inds1,count) =unzip <| segmented_reduce (\(_,i) (ind,_)-> (ind,i+1)) (0,(-1)) flag flagi
+             let counts= (++) [0] <| scatter (replicate (y+1) 0) inds1  count
+             in scan (+) 0 counts
   let sort1 = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if j0==j1 then i0<=i1 else j0 <= j1) (zip mat1.Inds mat1.Vals)
-  let flag0 = map2 (\((ind0,_),_) ((ind1,_),_) -> ind0!=ind1) sort0 (rotate (-1) sort0)
-  let flag0i = map (\b -> if b then 1 else 0) flag0
-  let count0 = (++) [0] <| segmented_reduce (\i _-> i+1) 0 flag0 flag0i
-  let ptr0 = scan (+) 0 count0
-  let flag1 = map2 (\((_,ind0),_) ((_,ind1),_) -> ind0!=ind1) sort1 (rotate (-1) sort1)
-  let flag1i = map (\b -> if b then 1 else 0) flag1
-  let count1 =(++)  [0] <| segmented_reduce (\i _-> i+1) 0 flag1 flag1i
-  let ptr1 = scan (+) 0 count1
+  let ptr1 = let (inds,flag) = unzip <| map2 (\((_,ind0),_) ((_,ind1),_) -> (ind0,ind0!=ind1)) sort1 (rotate (-1) sort1)
+             let flagi = zip inds <| replicate (length flag) 0
+             let (inds1,count) =unzip <| segmented_reduce (\(_,i) (ind,_)-> (ind,i+1)) (0,(-1)) flag flagi
+             let counts= (++) [0] <| scatter (replicate (y+1) 0) inds1 count
+             in scan (+) 0 counts
   let dense = expand (\_ -> y) (matMult sort0 ptr0 sort1 ptr1 mul add) (iota x)
   let (inds,vals) =unzip <| filter (\(_,v) -> ! (M.eq v M.zero)) dense
   in {Inds = inds, Vals = vals, _x=mat0._x, _y=mat1._y}
 
 let mul [x][y][z] (mat0 : matrix[x][y]) (mat1 : matrix[y][z]) : matrix[x][z] =
   mulFun mat0 mat1 (M.mul) (M.add)
-
 }
