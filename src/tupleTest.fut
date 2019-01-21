@@ -8,7 +8,7 @@ module intEq : (MonoidEq with t=i32) = {type t = i32
                                         let zero= 0i32 }
 
 --module coord = spCoord(intEq)
-module coord = spCoordSized(intEq)
+module coord = spCoord(intEq)
 
 --Make tests
 --Make a sparse matrix
@@ -113,7 +113,7 @@ let test13 =
   let a = unflatten 2 2 <| replicate 4 1
   let mat = coord.fromDense a
   let res = coord.toDense <| coord.sparseMap mat (*2)
-  let len = 4 == (length <| flatten a)
+  let len = 4 == (length <| flatten res)
   let vals = reduce (&&) true <| map (==2) <| flatten res
   in len && vals
 
@@ -140,7 +140,7 @@ let test16 =
   let b = unflatten 3 2 <| iota 6
   let mat = coord.fromDense b
   let res = coord.elementwise a mat (*) 1
-  in res.Vals==mat.Vals
+  in res.Vals==mat.Vals && ((coord.getDims res) == (3,2))
 
 -- elementwise with two full
 let test17 =
@@ -164,10 +164,22 @@ let test19 =
   let mat = coord.fromDense <| unflatten 3 2 <| iota 6
   let b = coord.empty 2 3
   let res = coord.mul mat b
-  in b.Vals==res.Vals && ((length res._x) == 3) && ((length res._y) == 3)
+  in b.Vals==res.Vals && ((coord.getDims res) == (3,3))
+
 --multiplication with two full
+let test20 =
+  let mat = coord.fromDense <| unflatten 2 2 <| map (+1) <| iota 4
+  let res = coord.mul mat mat
+  let len = (2,2) == (coord.getDims res)
+  let vals = [7,10,15,22] == res.Vals
+  in len && vals
 
 --multiplication with all mismatched values
+let test21 =
+  let a = coord.fromDense [[0,2],[0,2],[0,2]]
+  let b = coord.fromDense [[3,3,3],[0,0,0]]
+  let res = coord.mul a b
+  in (res.Vals==[] ) && ((coord.getDims res) == (3,3))
 
 
 let main =
@@ -177,5 +189,5 @@ let main =
   let list = true
   let maps = test12 && test13 && test14
   let elem = test15 && test16 && test17 && test18
-  let mult = test19
+  let mult = test19 && test20 --&& test21
   in make && up && trans && maps&& elem && mult && list
