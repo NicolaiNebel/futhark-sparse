@@ -46,6 +46,28 @@ let toDense (mat : matrix) : [][]M.t =
     let res = scatter zeros inds mat.vals
     in unflatten dim.1 dim.2 res
 
+let get (mat : matrix) i j : M.t=
+  if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
+  then M.zero
+  else let part = unsafe(mat.cols[mat.row_ptr[i]:mat.row_ptr[i+1]])
+       let ind = find_idx_first j part
+       in if ind == (-1)
+          then M.zero
+          else unsafe(mat.vals[mat.row_ptr[i]+ind])
+
+let update (mat : matrix) i j (el:M.t) : matrix=
+  if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
+  then mat
+  else let part = unsafe(mat.cols[mat.row_ptr[i]:mat.row_ptr[i+1]])
+       let ind = find_idx_first j part
+       in if ind == (-1)
+          then let len = length mat.vals
+               let ind = unsafe(mat.cols[i+1])-1
+               let vals = scatter (replicate (len+1) M.zero) ((map (\i -> if i>= ind then i+1 else i) (iota len)) ++ [ind] ) (mat.vals++[el])
+               let cols =scatter (replicate (len+1) 0) ((map (\i -> if i>= ind then i+1 else i) (iota len))++[ind]) mat.cols++[ind]
+               in {vals = vals, row_ptr = update (copy mat.row_ptr) i (unsafe(mat.row_ptr[i])+1),cols= cols, dims=mat.dims}
+          else {vals = update (copy mat.vals) (unsafe(mat.cols[i])+ind) el, row_ptr = mat.row_ptr, cols=mat.cols, dims=mat.dims}
+
 let toList (mat : matrix) : []M.t =
     let dim = mat.dims
     let zeros = replicate (dim.1 * dim.2) M.zero
