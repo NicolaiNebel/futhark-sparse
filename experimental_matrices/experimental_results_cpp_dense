@@ -1,0 +1,5 @@
+0.1 100 5841 microsecs
+0.2 100 6030 microsecs
+0.3 100 2434 microsecs
+0.1 200 23800 microsecs
+makefile:10: recipe for target 'time' failed

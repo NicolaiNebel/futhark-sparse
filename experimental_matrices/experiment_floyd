@@ -1,0 +1,16 @@
+Factors: |V|, size of graph                 Levels: ( 10, 50, 100, 200, 300, 400, 500, 600 )
+         s  , sparsity of graph                     ( .05, .1, .15, .2, .25, .3 ) more?
+
+         For cpp: dense and coord list representations
+
+Design points: Full factorial
+
+input:   boolean matrix representing the graph
+
+metrics: wall time (ms)
+         Only measure actual compuation time if at all possible.
+
+Possible contamination: How to remove time to construct matrix from running time?
+                        How to measure futhark with sufficient accuracy?
+
+If I dont slack off: Verify implementation from experiment results
