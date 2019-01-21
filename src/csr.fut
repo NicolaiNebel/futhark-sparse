@@ -9,7 +9,7 @@ module csr (M : MonoidEq) = {
 
 -- assume row-major
 let find_idx_first [n] (e:i32)  (xs:[n]i32) : i32 =
-    let es = map2 (\x i -> if e < x then i else n) xs (iota n)
+    let es = map2 (\x i -> if e == x then i else n) xs (iota n)
     let res = reduce i32.min n es
     in if res == n then -1 else (res-1)
 
@@ -98,22 +98,58 @@ let mult_mat_vec (mat : matrix) (vec : []M.t) : []M.t  =
 --let diag (size : i32) (i : M.t) : matrix =
 --  let (inds, vals) = 
 
+module dual = csc(M)
+
 let mul (mat0 : matrix) (mat1 : matrix) : matrix =
-    if mat0.dims.2 == mat1.dims.1
-    -- 
-    then let val_list = toList mat1
-	 -- make column vectors
-	 let cols = map(\x -> val_list[x*mat1.dims.1:x*mat1.dims.1+mat1.dims.1]) (iota mat1.dims.2)
-	 -- multiply every column vector with the matrix
-         let vecs = map(\x -> mult_mat_vec mat0 x ) cols
-	 in fromDense vecs -- need to transpose. Call csc module!
-    else empty (0, 0)
+    -- Get the dimensions
+    -- Should really check that K == K'
+    let (M,K) = mat0.dims
+    let (K',N) = mat1.dims
 
+    -- Get mat1 on column form
+    let mat1 = dual.fromCsr(mat1)
 
+    -- Compute all the intervals of rows in the (val,col) array
+    -- Compute which rows are actually present in mat0
+    let row_ptr' = tail mat0.row_ptr ++ [ length mat0.vals ]
+    let row_lens = map2 (-) row_ptr' mat0.row_ptr
+    let (row_lens,real_rows) = zip row_lens (iota (length row_lens)) |> filter (\x -> x.1 != 0) |> unzip
 
+    let from_to = map2 (\x y -> (x,x+y)) real_rows row_lens
+
+    -- For each row in mat0
+    -- Compute the corresponding row in the result
+    in loop C = empty (M,N) for i < (length real_rows) do
+      let i = unsafe( real_rows[i] )
+      -- A_i is the corresponding row in mat0
+      let (from, to) = unsafe from_to[i]
+      let mat0_vals_cols = zip mat0.vals mat0.cols
+      let A_i = map (\i -> unsafe(mat0_vals_cols[i])) <| range from to
+
+      let col_ptr' = tail mat1.col_ptr ++ [ length mat1.vals ]
+      let col_lens = map2 (-) col_ptr' mat1.col_ptr
+      let (col_lens,real_cols) = zip col_lens (iota (length col_lens)) |> filter (\x -> x.1 != 0) |> unzip
+
+      -- Compute the row as a segmented array
+      -- No need to process col_ptr, the cols we just filtered out are duplicate values in it anyways
+      let flags = idxs_to_flags mat1.col_ptr
+      let xs = zip mat1.vals mat1.rows
+
+      let f = \(v,r) ->
+        let idx = find_idx_first r (map (.2) A_i)
+        in if idx < 0 then 0 else A_i[idx].1 * v
+
+      let xs' = map f xs
+
+      -- this is supposed to be
+      -- for each column (this is from the flags array)
+      -- multiply it with the row (reduce_from_row)
+      -- and get an array of values of length (length mat1.col_ptr)
+      -- that contains the values of each real col multiplied by A_i
+      -- So these results map to the points
+      let new_row = segmented_reduce (+) 0 flags xs'
+      let new_row = zip new_row real_cols
+
+      in foldl (\C (v, c) -> update C i c v) C new_row
 }
 
-
--- -- Only updates non-zero values of map
--- let matrix_map 'b (f: a -> b) (m: matrix a): matrix b =
---   { dims = m.dims, vals = map f m.vals, row_ptr = m.row_ptr, cols = m.cols }
