@@ -57,8 +57,8 @@ let get (mat : matrix) i j : M.t =
 let getDims (mat : matrix) : (i32,i32) = mat.Dims
 
 let transpose (mat : matrix) : matrix =
-  let inds = map (\(i,j) -> (j,i)) mat.Inds
-  in {Inds = inds, Vals = mat.Vals, Dims = (mat.Dims.2,mat.Dims.1)}
+  let (i,j) = unzip mat.Inds
+  in {Inds = zip j i, Vals = mat.Vals, Dims = (mat.Dims.2,mat.Dims.1)}
 
 let toListCoord (mat : matrix) : []((i32,i32),M.t) =
   zip mat.Inds mat.Vals
@@ -77,6 +77,7 @@ let elementwise (mat0 : matrix) (mat1 : matrix) fun (ne : M.t) : matrix =
   else empty 0 0
 
 --work = O(n*m) n=len part0, m=len part1
+--span = O(max(len part1,log (len part0))
 let matMult (sort0 : []((i32,i32),M.t)) count0 (sort1 : []((i32,i32),M.t)) count1 mul add i j : ((i32,i32),M.t) =
   let part0 = sort0[count0[i]:count0[i+1]]
   let part1 = sort1[count1[j]:count1[j+1]]
@@ -151,7 +152,7 @@ let find_idx_first 'v [n] (e:v)  (eq : v -> v -> bool) (xs:[n]v) : i32 =
   in if res == n then -1 else res
 
 let update [x][y] (mat : matrix [x][y]) i j (el : M.t) : matrix[x][y] =
-  if i>=x && j>=y || i<0 || j<0
+  if i>=x || j>=y || i<0 || j<0
   then mat
   else let ind = find_idx_first (i,j) (==) mat.Inds in
        if ind != -1
@@ -211,7 +212,7 @@ let mulFun [x][y][z] (mat0 : matrix[x][y]) (mat1 : matrix[y][z]) (mul: M.t -> M.
              let (inds1,count) =unzip <| segmented_reduce (\(_,i) (ind,v)-> (ind,i+v)) (0,0) flag flagi
              let col_lens= scatter (replicate z 0) inds1 count
              in scan (+) 0 <| [0] ++ col_lens
-  let dense = expand (\_ -> y) (matMult sort0 ptr0 sort1 ptr1 mul add) (iota x)
+  let dense = expand (\_ -> z) (matMult sort0 ptr0 sort1 ptr1 mul add) (iota x)
   let (inds,vals) = unzip <| filter (\(_,v) -> ! (M.eq v M.zero)) dense
   in {Inds = inds, Vals = vals, _x=mat0._x, _y=mat1._y}
 
