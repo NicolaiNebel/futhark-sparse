@@ -2,8 +2,8 @@ import "tupleSparse"
 import "MonoidEq"
 -- MonoidEq with t=*type* is important to show the compiler the type to be compared with
 module intEq : (MonoidEq with t=i32) = {type t = i32
-                                        let add = (+)
-                                        let mul= (*)
+                                        let add = (i32.+)
+                                        let mul= (i32.*)
                                         let eq = (i32.==)
                                         let zero= 0i32 }
 
@@ -159,6 +159,7 @@ let test18 =
   let res = coord.elementwise mata matb (*) 1
   in (length res.Vals==4) && (reduce (&&) true <| map (==1) res.Vals)
 
+--Multiplication
 --Mult testsmultiplication with an empty matrix
 let test19 =
   let mat = coord.fromDense <| unflatten 3 2 <| iota 6
@@ -176,10 +177,10 @@ let test20 =
 
 --multiplication with all mismatched values
 let test21 =
-  let a = coord.fromDense [[0,2],[0,2],[0,2]]
+  let a = coord.fromDense [[0,2],[0,2],[0,2],[0,2]]
   let b = coord.fromDense [[3,3,3],[0,0,0]]
   let res = coord.mul a b
-  in (res.Vals==[] ) && ((coord.getDims res) == (3,3))
+  in (res.Vals==[] ) && ((coord.getDims res) == (4,3))
 
 
 let main =
@@ -189,5 +190,5 @@ let main =
   let list = true
   let maps = test12 && test13 && test14
   let elem = test15 && test16 && test17 && test18
-  let mult = test19 && test20 --&& test21
+  let mult = test19 && test20 && test21
   in make && up && trans && maps&& elem && mult && list
