@@ -1,0 +1,145 @@
+fut_100_0.1
+361496
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_100_0.2
+344627
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_100_0.3
+350810
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_200_0.1
+1249225
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_200_0.2
+1262125
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_200_0.3
+1267228
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_300_0.1
+4683586
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_300_0.2
+4831092
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_300_0.3
+4815625
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_400_0.1
+8743301
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_400_0.2
+8792017
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_400_0.3
+8785809
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_500_0.1
+11226330
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_500_0.2
+11206555
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_500_0.3
+11069451
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_600_0.1
+26149203
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_600_0.2
+26323592
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_600_0.3
+26519339
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_700_0.1
+30872284
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_700_0.2
+30994368
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_700_0.3
+30884159
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_800_0.1
+59762286
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_800_0.2
+60320595
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_800_0.3
+60337204
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_900_0.1
+67839777
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_900_0.2
+68459111
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_900_0.3
+68849720
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1000_0.1
+76693706
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1000_0.2
+76861367
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1000_0.3
+77191280
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1100_0.1
+158412660
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1100_0.2
+160051781
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1100_0.3
+160319948
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1200_0.1
+174716146
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1200_0.2
+175059926
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1200_0.3
+175217561
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1300_0.1
+190171826
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1300_0.2
+191105209
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1300_0.3
+191132819
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1400_0.1
+206682763
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1400_0.2
+207086356
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1400_0.3
+207035181
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1500_0.1
+437365851
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1500_0.2
+440088985
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1500_0.3
+440783541
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1600_0.1
+470686914
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1600_0.2
+471620528
+#<opaque {Dims: (i32, i32), Inds: [](i32, i32), Vals: []bool}>
+fut_1600_0.3
+fut_1700_0.1
+fut_1700_0.2
+
