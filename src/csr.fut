@@ -183,27 +183,13 @@ let idxs_to_flags [n] (is : [n]i32) : []bool =
   -- if we do implement a csr -> csc method then we can do transpose in O(1) time by just
   -- changing the type and swapping the dimensions from.
   -- tranpose matrix CSR -> matrix csc ... also works the other way
-let mult_mat_vec (mat : csr_matrix) (vec : []M.t) : []M.t  =
-  if mat.dims.2 == length(vec) 
-  then
-    let multis = map2 (\x y -> M.mul x vec[y]) mat.vals mat.cols
-    let lens = length(mat.vals)
-    let testflags = idxs_to_flags mat.row_ptr
-
-    -- same as above?
-    let tmp =  scatter (replicate (reduce (+) 0 [lens]) 0) ([0] ++ mat.row_ptr) (iota lens)
-    let flags = map (>0) tmp
-    -- could maybe remove that part
-
-    let segs = segmented_scan (M.add) M.zero flags multis
-    let flag_1 = flags ++ [true]
-    let newf = map(\x -> flag_1[x+1]) (iota (length(flags)))
-
-
-    let (_,res) = unzip (filter (.1) <| zip newf segs)
-    in res
-  else [] -- case the dims does not match
-
+let mult_mat_vec (mat: csr_matrix) (vec: []elem) : []elem =
+  if mat.dims.2 != length(vec) 
+  then []
+  else
+    let flags = scatter (replicate (length mat.vals) false) mat.row_ptr (replicate mat.dims.1 true)
+    let f = \v c -> M.mul v (unsafe(vec[c]))
+    in segmented_reduce M.add M.zero flags <| map2 f mat.vals mat.cols
 
 --let diag (size : i32) (i : M.t) : csr_matrix =
 --  let (inds, vals) = 
@@ -236,7 +222,6 @@ let mul (mat0 : csr_matrix) (mat1 : csc_matrix) : csr_matrix =
       let (_,real_cols) = zip col_lens (iota (length col_lens)) |> filter (\x -> x.1 != 0) |> unzip
 
       -- Compute the row as a segmented array
-      -- No need to process col_ptr, the cols we just filtered out are duplicate values in it anyways
       let flags = idxs_to_flags mat1.col_ptr            
       let xs = zip mat1.vals mat1.rows                                          
 
@@ -257,4 +242,3 @@ let mul (mat0 : csr_matrix) (mat1 : csc_matrix) : csr_matrix =
 
       in foldl (\C (v, c) -> update C i c v) C new_row
 }
-

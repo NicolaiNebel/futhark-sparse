@@ -78,6 +78,12 @@ entry updateTest (m: [][]i32) (i: i32) (j: i32) (x:i32): [][]i32 =
 -- output { [2,4] }
 -- input { [[1, 0], [0,1]] [1,5] }
 -- output { [1,5] }
+-- input { [[1, 1], [0,1]] [1,5] }
+-- output { [6,5] }
+-- input { [[2, 1], [0,1]] [1,5] }
+-- output { [7,5] }
+-- input { [[2, 1], [0,1], [2,2]] [1,5] }
+-- output { [7,5,12] }
 
 entry multMatVecTest (m : [][]i32) (v: []i32) : []i32 =
   csr_i32.mult_mat_vec (csr_i32.fromDense m) v
