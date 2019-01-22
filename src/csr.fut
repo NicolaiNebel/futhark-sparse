@@ -119,22 +119,8 @@ let get (mat : csr_matrix) i j : M.t=
           then M.zero
           else unsafe(mat.vals[mat.row_ptr[i]+ind])
 
--- Updating a single element of a CSR matrix
--- let update (mat : csr_matrix) i j (el:M.t) : csr_matrix=
---   if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
---   then mat
---   else let part = unsafe(mat.cols[mat.row_ptr[i]:mat.row_ptr[i+1]])
---        let ind = find_idx_first j part
---        in if ind == (-1)
---           then let len = length mat.vals
---                let ind = unsafe(mat.cols[i+1])-1
---                let vals = scatter (replicate (len+1) M.zero) ((map (\i -> if i>= ind then i+1 else i) (iota len)) ++ [ind] ) (mat.vals++[el])
---                let cols = scatter (replicate (len+1) 0) ((map (\i -> if i>= ind then i+1 else i) (iota len))++[ind]) mat.cols++[ind]
---                in {vals = vals, row_ptr = update (copy mat.row_ptr) i (unsafe(mat.row_ptr[i])+1),cols= cols, dims=mat.dims}
---           else {vals = update (copy mat.vals) (unsafe(mat.cols[i])+ind) el, row_ptr = mat.row_ptr, cols=mat.cols, dims=mat.dims}
-
 let update (mat: csr_matrix) (i: i32) (j: i32) (e: elem): csr_matrix =
-  if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
+  if i>=mat.dims.1 || j>=mat.dims.2 || i<0 || j<0
     then mat
     else
       -- Compute where in mat.vals and mat.cols row i appears
@@ -143,10 +129,10 @@ let update (mat: csr_matrix) (i: i32) (j: i32) (e: elem): csr_matrix =
       let part = unsafe(mat.cols[row_start:row_end])
       let ind = find_idx_first j part
       in if ind != (-1) -- Is element present in the array?
-      then { vals = update (copy mat.vals) (unsafe(mat.cols[row_start + ind] + row_start)) e
-                 , row_ptr = mat.row_ptr
-                 , cols = mat.cols
-                 , dims = mat.dims }
+      then { vals = update (copy mat.vals) (row_start + ind) e
+           , row_ptr = mat.row_ptr
+           , cols = mat.cols
+           , dims = mat.dims }
       else -- Otherwise we have to make room for it
         -- Put the value at the start of the row. We don't assume cols are sorted
         let (val_fst, val_lst) = split row_start mat.vals
