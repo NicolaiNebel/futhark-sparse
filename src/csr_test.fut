@@ -1,7 +1,6 @@
 import "csr"
 import "MonoidEq"
 
-
 module csr_i32 = csr(monoideq_i32)
 
 -- ==
@@ -87,3 +86,22 @@ entry updateTest (m: [][]i32) (i: i32) (j: i32) (x:i32): [][]i32 =
 
 entry multMatVecTest (m : [][]i32) (v: []i32) : []i32 =
   csr_i32.mult_mat_vec (csr_i32.fromDense m) v
+
+-- ==
+-- entry: mulTest
+-- input { [[1,2],[3,4]] [[1,2],[3,4]] }
+-- output { [[7,10],[15,22]] }
+-- input { [[1,2],[3,4]] [[1,2],[3,4]] }
+-- output { [[7,10],[15,22]] }
+-- input { [[1,0],[3,4]] [[1,2],[3,0]] }
+-- output { [[1,2],[15,6]] }
+-- input { [[1,2,3],[4,5,6]] [[0,0],[0,0],[0,0]] }
+-- output { [[0,0],[0,0]] }
+-- input { [[0,0],[0,0],[0,0]] [[1,2,3],[4,5,6]] }
+-- output { [[0,0,0],[0,0,0],[0,0,0]] }
+
+entry mulTest (m1: [][]i32) (m2: [][]i32): [][]i32 =
+  let m1 = csr_i32.fromDense m1
+  let m2 = m2 |> csr_i32.fromDense |> csr_i32.csrToCsc
+  let res = csr_i32.mul m1 m2
+  in csr_i32.toDense res
