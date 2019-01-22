@@ -40,7 +40,7 @@ let find_idx_first 'v [n] (e:v)  (eq : v -> v -> bool) (xs:[n]v) : i32 =
   in if res == n then -1 else res
 
 let update (mat : matrix) i j (el : M.t) : matrix =
-  if i>=mat.Dims.1 && j>=mat.Dims.2 || i<0 || j<0
+  if i>=mat.Dims.1 || (j-1)>=mat.Dims.2 || i<0 || j<0
   then mat
   else let ind = find_idx_first (i,j) (==) mat.Inds in
        if ind != -1
@@ -76,13 +76,14 @@ let elementwise (mat0 : matrix) (mat1 : matrix) fun (ne : M.t) : matrix =
        in {Inds = inds, Vals = vals, Dims = mat0.Dims}
   else empty 0 0
 
+--work = O(n*m) n=len part0, m=len part1
 let matMult (sort0 : []((i32,i32),M.t)) count0 (sort1 : []((i32,i32),M.t)) count1 mul add i j : ((i32,i32),M.t) =
   let part0 = sort0[count0[i]:count0[i+1]]
   let part1 = sort1[count1[j]:count1[j+1]]
   let is = map (\(ind,_) -> ind.1) part1
   let res = map (\((_,j),v) : M.t -> let ind = find_idx_first j (==) is
-                               in if ind == -1 then M.zero
-                                  else mul v (unsafe( part1[ind] ).2)
+                                     in if ind == -1 then M.zero
+                                        else mul v (unsafe( part1[ind] ).2)
                 ) part0
   in ((i,j),reduce add M.zero res)
 
@@ -90,16 +91,16 @@ let mulFun (mat0 : matrix) (mat1 : matrix) (mul: M.t -> M.t -> M.t) (add: M.t ->
   if mat0.Dims.2 == mat1.Dims.1
   then let sort0 = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if i0==i1 then j0<=j1 else i0 <= i1) (zip mat0.Inds mat0.Vals)
        let ptr0 = let (inds,flag) = unzip <| map2 (\((ind0,_),_) ((ind1,_),_) -> (ind0,ind0!=ind1)) sort0 (rotate (-1) sort0)
-             let flagi = zip inds <| replicate (length flag) 1
-             let (inds1,count) =unzip <| segmented_reduce (\(_,i) (ind,v)-> (ind,i+v)) (0,0) flag flagi
-             let row_lens= scatter (replicate mat0.Dims.1 0) inds1  count
-             in scan (+) 0 <| [0] ++ row_lens
+                  let flagi = zip inds <| replicate (length flag) 1
+                  let (inds1,count) =unzip <| segmented_reduce (\(_,i) (ind,v)-> (ind,i+v)) (0,0) flag flagi
+                  let row_lens= scatter (replicate mat0.Dims.1 0) inds1  count
+                  in scan (+) 0 <| [0] ++ row_lens
        let sort1 = merge_sort (\((i0,j0),_) ((i1,j1),_)-> if j0==j1 then i0<=i1 else j0 <= j1) (zip mat1.Inds mat1.Vals)
        let ptr1 = let (inds,flag) = unzip <| map2 (\((_,ind0),_) ((_,ind1),_) -> (ind0,ind0!=ind1)) sort1 (rotate (-1) sort1)
-             let flagi = zip inds <| replicate (length flag) 1
-             let (inds1,count) =unzip <| segmented_reduce (\(_,i) (ind,v)-> (ind,i+v)) (0,0) flag flagi
-             let col_lens= scatter (replicate mat1.Dims.2 0) inds1 count
-             in scan (+) 0 <| [0] ++ col_lens
+                  let flagi = zip inds <| replicate (length flag) 1
+                  let (inds1,count) =unzip <| segmented_reduce (\(_,i) (ind,v)-> (ind,i+v)) (0,0) flag flagi
+                  let col_lens= scatter (replicate mat1.Dims.2 0) inds1 count
+                  in scan (+) 0 <| [0] ++ col_lens
        let dense = expand (\_ -> mat1.Dims.2) (matMult sort0 ptr0 sort1 ptr1 mul add) (iota mat0.Dims.1)
        let (inds,vals) =unzip <| filter (\(_,v) -> ! (M.eq v M.zero)) dense
        in {Inds = inds, Vals = vals, Dims = (mat0.Dims.1,mat1.Dims.2)}

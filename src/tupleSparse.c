@@ -1174,8 +1174,8 @@ char *futhark_context_get_error(struct futhark_context *ctx)
     ctx->error = NULL;
     return error;
 }
-static void memblock_unref(struct futhark_context *ctx, struct memblock *block,
-                           const char *desc)
+static int memblock_unref(struct futhark_context *ctx, struct memblock *block,
+                          const char *desc)
 {
     if (block->references != NULL) {
         *block->references -= 1;
@@ -1195,15 +1195,18 @@ static void memblock_unref(struct futhark_context *ctx, struct memblock *block,
         }
         block->references = NULL;
     }
+    return 0;
 }
-static void memblock_alloc(struct futhark_context *ctx, struct memblock *block,
-                           int64_t size, const char *desc)
+static int memblock_alloc(struct futhark_context *ctx, struct memblock *block,
+                          int64_t size, const char *desc)
 {
     if (size < 0)
         panic(1, "Negative allocation of %lld bytes attempted for %s in %s.\n",
               (long long) size, desc, "default space",
               ctx->cur_mem_usage_default);
-    memblock_unref(ctx, block, desc);
+    
+    int ret = memblock_unref(ctx, block, desc);
+    
     block->mem = (char *) malloc(size);
     block->references = (int *) malloc(sizeof(int));
     *block->references = 1;
@@ -1221,13 +1224,16 @@ static void memblock_alloc(struct futhark_context *ctx, struct memblock *block,
             fprintf(stderr, " (new peak).\n");
     } else if (ctx->detail_memory)
         fprintf(stderr, ".\n");
+    return ret;
 }
-static void memblock_set(struct futhark_context *ctx, struct memblock *lhs,
-                         struct memblock *rhs, const char *lhs_desc)
+static int memblock_set(struct futhark_context *ctx, struct memblock *lhs,
+                        struct memblock *rhs, const char *lhs_desc)
 {
-    memblock_unref(ctx, lhs, lhs_desc);
+    int ret = memblock_unref(ctx, lhs, lhs_desc);
+    
     (*rhs->references)++;
     *lhs = *rhs;
+    return ret;
 }
 void futhark_debugging_report(struct futhark_context *ctx)
 {
@@ -1672,6 +1678,38 @@ static inline int64_t pow64(int64_t x, int64_t y)
         x *= x;
     }
     return res;
+}
+static inline bool itob_i8_bool(int8_t x)
+{
+    return x;
+}
+static inline bool itob_i16_bool(int16_t x)
+{
+    return x;
+}
+static inline bool itob_i32_bool(int32_t x)
+{
+    return x;
+}
+static inline bool itob_i64_bool(int64_t x)
+{
+    return x;
+}
+static inline int8_t btoi_bool_i8(bool x)
+{
+    return x;
+}
+static inline int16_t btoi_bool_i16(bool x)
+{
+    return x;
+}
+static inline int32_t btoi_bool_i32(bool x)
+{
+    return x;
+}
+static inline int64_t btoi_bool_i64(bool x)
+{
+    return x;
 }
 static inline int8_t sext_i8_i8(int8_t x)
 {
