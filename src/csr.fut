@@ -10,7 +10,7 @@ module csr (M : MonoidEq) = {
 
   type csc_matrix = { dims: (i32, i32), vals: []elem, col_ptr: []i32, rows: []i32 }
 
-  let fromCsr (m : csr_matrix): csc_matrix =
+  let csrToCsc (m : csr_matrix): csc_matrix =
     -- Grab the dimensions
     let (N,M) = m.dims
 
@@ -35,11 +35,38 @@ module csr (M : MonoidEq) = {
 
     in { dims = (N,M), vals = vals, col_ptr = col_ptr, rows = rows }
 
+  let cscToCsr (m : csc_matrix): csr_matrix =
+    -- Grab the dimensions
+    let (N,M) = m.dims
+
+    -- Find the lengths of all the cols in m
+    let col_lens = map2 (-) (tail m.col_ptr ++ [length m.vals]) m.col_ptr
+
+    -- For each col, expand to (length col) of col index to zip with vals. sum (col_lens) == length m.vals
+    let cols: []i32 = expand (.1) (\x _ -> x.2) <| zip col_lens <| iota (length col_lens)
+    let tagged_vals: [](elem,i32) = zip m.vals cols
+
+    -- sort the value col pairs by rowumn
+    let (sorted_by_row, rows) = zip tagged_vals m.rows |> qsort_by_key (.2) (<=) |> unzip
+  
+    -- I feel as certain as I can be that this can (and should) be done much, much smarter
+    let flags = map2 (!=) rows <| rotate (-1) rows
+    let real_rows = zip rows flags |> filter (.2) |> map (.1)
+    let row_lens: []i32 = segmented_reduce (+) 0 flags <| replicate (length flags) 1
+    let all_row_lens: []i32 = scatter (replicate M 0) real_rows row_lens
+    let row_ptr: []i32 = scan (+) 0 <| [0] ++ init all_row_lens
+
+    let (vals, cols) = unzip sorted_by_row
+
+    in { dims = (N,M), vals = vals, row_ptr = row_ptr, cols = cols }
+
 -- assume row-major
+-- Given an element e and a list of elements,
+-- Find the first index where e occurs, or -1 if it is not an element
 let find_idx_first [n] (e:i32)  (xs:[n]i32) : i32 =
     let es = map2 (\x i -> if e == x then i else n) xs (iota n)
     let res = reduce i32.min n es
-    in if res == n then -1 else (res-1)
+    in if res == n then -1 else res
 
 let fromList (dims : (i32, i32)) (xs : []((i32,i32),elem)): csr_matrix =
   let xs = filter (\(_,x) -> !(M.eq x M.zero)) xs
@@ -58,44 +85,82 @@ let fromList (dims : (i32, i32)) (xs : []((i32,i32),elem)): csr_matrix =
   in { dims = dims, vals = vals, row_ptr = row_ptr, cols = cols }
 
 let fromDense [n][m] (matrix: [n][m]elem): csr_matrix =
-  let idxs = replicate m (iota n) |> flatten |> zip (iota m)
+  let row_idxs = replicated_iota (replicate n m)
+  let col_idxs = replicate n (iota m) |> flatten
+  let idxs = zip row_idxs col_idxs
   let idxs_mat = zip idxs <| flatten matrix
   let entries = filter (\(_,x) -> !(M.eq M.zero x)) idxs_mat
   in fromList (n,m) entries
 
-let empty (dim : (i32, i32)) : csr_matrix = {row_ptr = [], vals=[], dims=dim, cols = []}
+let empty (dim : (i32, i32)) : csr_matrix =
+  {row_ptr = [], vals=[], dims=dim, cols = []}
 
 let toDense (mat : csr_matrix) : [][]M.t =
-    let dim = mat.dims
-    let zeros = replicate (dim.1 * dim.2) M.zero
-    let new_ptr = mat.row_ptr ++ [length(mat.vals)+1]
+    let (N,M) = mat.dims
 
-    let inds = map(\x -> mat.cols[x] * find_idx_first x new_ptr) (iota dim.2)
-    let res = scatter zeros inds mat.vals
-    in unflatten dim.1 dim.2 res
+    let sizes = map2 (-) (tail mat.row_ptr ++ [length mat.vals]) mat.row_ptr
+    let rows = replicated_iota sizes
+    let inds = map2 (\r c -> r*M + c) rows mat.cols
 
+    let res = scatter (replicate (N*M) M.zero) inds mat.vals
+    in unflatten N M res
+
+-- Indexing into CSR matrices
 let get (mat : csr_matrix) i j : M.t=
-  if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
-  then M.zero
-  else let part = unsafe(mat.cols[mat.row_ptr[i]:mat.row_ptr[i+1]])
+  let row_ptr_with_end = mat.row_ptr ++ [length mat.vals]
+  in if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
+  then M.zero -- Should indicate error
+  else let part = unsafe(mat.cols[row_ptr_with_end[i]:row_ptr_with_end[i+1]])
        let ind = find_idx_first j part
        in if ind == (-1)
-          then M.zero
+          then break(M.zero)
           else unsafe(mat.vals[mat.row_ptr[i]+ind])
 
-let update (mat : csr_matrix) i j (el:M.t) : csr_matrix=
-  if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
-  then mat
-  else let part = unsafe(mat.cols[mat.row_ptr[i]:mat.row_ptr[i+1]])
-       let ind = find_idx_first j part
-       in if ind == (-1)
-          then let len = length mat.vals
-               let ind = unsafe(mat.cols[i+1])-1
-               let vals = scatter (replicate (len+1) M.zero) ((map (\i -> if i>= ind then i+1 else i) (iota len)) ++ [ind] ) (mat.vals++[el])
-               let cols =scatter (replicate (len+1) 0) ((map (\i -> if i>= ind then i+1 else i) (iota len))++[ind]) mat.cols++[ind]
-               in {vals = vals, row_ptr = update (copy mat.row_ptr) i (unsafe(mat.row_ptr[i])+1),cols= cols, dims=mat.dims}
-          else {vals = update (copy mat.vals) (unsafe(mat.cols[i])+ind) el, row_ptr = mat.row_ptr, cols=mat.cols, dims=mat.dims}
+-- Updating a single element of a CSR matrix
+-- let update (mat : csr_matrix) i j (el:M.t) : csr_matrix=
+--   if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
+--   then mat
+--   else let part = unsafe(mat.cols[mat.row_ptr[i]:mat.row_ptr[i+1]])
+--        let ind = find_idx_first j part
+--        in if ind == (-1)
+--           then let len = length mat.vals
+--                let ind = unsafe(mat.cols[i+1])-1
+--                let vals = scatter (replicate (len+1) M.zero) ((map (\i -> if i>= ind then i+1 else i) (iota len)) ++ [ind] ) (mat.vals++[el])
+--                let cols = scatter (replicate (len+1) 0) ((map (\i -> if i>= ind then i+1 else i) (iota len))++[ind]) mat.cols++[ind]
+--                in {vals = vals, row_ptr = update (copy mat.row_ptr) i (unsafe(mat.row_ptr[i])+1),cols= cols, dims=mat.dims}
+--           else {vals = update (copy mat.vals) (unsafe(mat.cols[i])+ind) el, row_ptr = mat.row_ptr, cols=mat.cols, dims=mat.dims}
 
+let update (mat: csr_matrix) (i: i32) (j: i32) (e: elem): csr_matrix =
+  if i>=mat.dims.1 && j>=mat.dims.2 || i<0 || j<0
+    then mat
+    else
+      -- Compute where in mat.vals and mat.cols row i appears
+      let (row_start, row_end) = if i == mat.dims.1 - 1 then unsafe((mat.row_ptr[i], length mat.vals))
+                                                        else unsafe((mat.row_ptr[i], mat.row_ptr[i+1]))
+      let part = unsafe(mat.cols[row_start:row_end])
+      let ind = find_idx_first j part
+      in if ind != (-1) -- Is element present in the array?
+      then { vals = update (copy mat.vals) (unsafe(mat.cols[row_start + ind] + row_start)) e
+                 , row_ptr = mat.row_ptr
+                 , cols = mat.cols
+                 , dims = mat.dims }
+      else -- Otherwise we have to make room for it
+        -- Put the value at the start of the row. We don't assume cols are sorted
+        let (val_fst, val_lst) = split row_start mat.vals
+        let vals' = val_fst ++ [e] ++ val_lst
+        
+        let (col_fst, col_lst) = split row_start mat.cols
+        let cols' = col_fst ++ [j] ++ col_lst
+
+        let (ptr_fst, ptr_last) = split (i+1) mat.row_ptr
+        let row_ptr' = ptr_fst ++ map (\x -> x+1) ptr_last
+        in { vals = vals'
+           , cols = cols'
+           , row_ptr = row_ptr'
+           , dims = mat.dims }
+
+
+-- ???
 let toList (mat : csr_matrix) : []M.t =
     let dim = mat.dims
     let zeros = replicate (dim.1 * dim.2) M.zero
@@ -104,11 +169,6 @@ let toList (mat : csr_matrix) : []M.t =
     let inds = map(\x -> mat.cols[x] + (find_idx_first x  new_ptr) * dim.2) (iota dim.2) -- fix
     in scatter zeros inds mat.vals
 
--- Doesnt compile du to vals: *[]M.t instead of vals: []M.t
---let scale (mat : csr_matrix) (i : M.t) : csr_matrix =
---  let tmp = copy mat.vals
---  let newval = map(\x -> M.mul x i) tmp
---    in {dims = mat.dims, vals = newval, row_prt = mat.row_ptr, cols = mat.cols}
 let segmented_replicate [n] (reps:[n]i32) (vs:[n]i32) : []i32 =
   let idxs = replicated_iota reps
   in map (\i -> unsafe vs[i]) idxs
@@ -117,7 +177,6 @@ let idxs_to_flags [n] (is : [n]i32) : []bool =
     let vs = segmented_replicate is (iota n)
     in map2 (!=) vs ([0] ++ vs[:length vs-1])
 
-
   -- in order to extend this to work on matrix X matrix multiplications
   -- We can do one column vector at the time
   -- We could transform the second matrix in csc format so that the rows and the colums match up
@@ -125,24 +184,25 @@ let idxs_to_flags [n] (is : [n]i32) : []bool =
   -- changing the type and swapping the dimensions from.
   -- tranpose matrix CSR -> matrix csc ... also works the other way
 let mult_mat_vec (mat : csr_matrix) (vec : []M.t) : []M.t  =
-    if mat.dims.2 == length(vec) 
-    then let multis = map2 (\x y -> M.mul x vec[y]) mat.vals mat.cols
-	 let lens = length(mat.vals)
-	 let testflags = idxs_to_flags mat.row_ptr
+  if mat.dims.2 == length(vec) 
+  then
+    let multis = map2 (\x y -> M.mul x vec[y]) mat.vals mat.cols
+    let lens = length(mat.vals)
+    let testflags = idxs_to_flags mat.row_ptr
 
-	 -- same as above?
-         let tmp =  scatter (replicate (reduce (+) 0 [lens]) 0) ([0] ++ mat.row_ptr) (iota lens)
-	 let flags = map (>0) tmp
-	 -- could maybe remove that part
+    -- same as above?
+    let tmp =  scatter (replicate (reduce (+) 0 [lens]) 0) ([0] ++ mat.row_ptr) (iota lens)
+    let flags = map (>0) tmp
+    -- could maybe remove that part
 
-         let segs = segmented_scan (M.add) M.zero flags multis
-	 let flag_1 = flags ++ [true]
-	 let newf = map(\x -> flag_1[x+1]) (iota (length(flags)))
+    let segs = segmented_scan (M.add) M.zero flags multis
+    let flag_1 = flags ++ [true]
+    let newf = map(\x -> flag_1[x+1]) (iota (length(flags)))
 
-	 
-	 let (_,res) = unzip (filter (.1) <| zip newf segs)
-         in res
-    else [M.zero] -- case the dims does not match
+
+    let (_,res) = unzip (filter (.1) <| zip newf segs)
+    in res
+  else [] -- case the dims does not match
 
 
 --let diag (size : i32) (i : M.t) : csr_matrix =

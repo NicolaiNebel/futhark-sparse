@@ -21,13 +21,63 @@ entry fromListTest (x: i32) (y: i32) (rows: []i32) (cols: []i32) (vals: []i32): 
      )
 
 -- ==
--- entry: mulTest
--- input { [1,0] [0,1] }
--- output { [1,0] [0,1] }
+-- entry: toDenseFromDenseIdentTest
+-- input { [[1i32, 0i32], [0i32, 1i32]] }
+-- output { [[1i32, 0i32], [0i32, 1i32]] }
+-- input { [[1i32, 0i32, 4i32], [0i32, 1i32, 1i32]] }
+-- output { [[1i32, 0i32, 4i32], [0i32, 1i32, 1i32]] }
 
-entry mulTest (row1: []i32) (row2: []i32): ([]i32, []i32) =
-  let m1 = csr_i32.fromDense [ row1, row2 ]
-  --let m2 = csr_i32.fromCsr(csr_i32.fromDense(m2))
-  --let res = csr_i32.mul m1 m2
-  let xs = csr_i32.toDense m1
-  in unsafe( (xs[0],xs[1]) )
+entry toDenseFromDenseIdentTest (m: [][]i32): [][]i32 =
+  csr_i32.toDense <| csr_i32.fromDense m
+
+-- ==
+-- entry: csrToCscIdentTest
+-- input { [[1i32, 0i32], [0i32, 1i32]] }
+-- output { [[1i32, 0i32], [0i32, 1i32]] }
+-- input { [[1i32, 0i32, 4i32], [0i32, 1i32, 1i32]] }
+-- output { [[1i32, 0i32, 4i32], [0i32, 1i32, 1i32]] }
+
+entry csrToCscIdentTest (m: [][]i32): [][]i32 =
+  csr_i32.toDense <| csr_i32.cscToCsr <| csr_i32.csrToCsc <| csr_i32.fromDense m
+
+-- ==
+-- entry: getTest
+-- input { [[1i32, 0i32], [0i32, 1i32]] 0 0 }
+-- output { 1 }
+-- input { [[1i32, 0i32], [0i32, 1i32]] 0 1 }
+-- output { 0 }
+-- input { [[1i32, 0i32], [0i32, 1i32]] 1 0 }
+-- output { 0 }
+-- input { [[1i32, 0i32], [0i32, 1i32]] 1 1 }
+-- output { 1 }
+-- input { [[1i32, 0i32, 4i32], [0i32, 1i32, 1i32]] 0 2 }
+-- output { 4 }
+-- input { [[1i32, 0i32, 1i32], [0i32, 4i32, 1i32]] 1 1 }
+-- output { 4 }
+-- input { [[1i32, 0i32], [0i32, 1i32], [1i32, 0i32], [0i32, 1i32], [1i32, 4i32], [0i32, 1i32]] 4 1 }
+-- output { 4 }
+
+entry getTest (m: [][]i32) (i: i32) (j: i32): i32 =
+  let m = csr_i32.fromDense m
+  in csr_i32.get m i j
+
+-- ==
+-- entry: updateTest
+-- input { [[1i32, 0i32], [0i32, 1i32]] 0 0 2}
+-- output { [[2i32, 0i32], [0i32, 1i32]] }
+-- input { [[1i32, 0i32, 4i32], [0i32, 1i32, 1i32]] 0 1 5 }
+-- output { [[1i32, 5i32, 4i32], [0i32, 1i32, 1i32]] }
+
+entry updateTest (m: [][]i32) (i: i32) (j: i32) (x:i32): [][]i32 =
+  let m = csr_i32.fromDense m
+  in csr_i32.update m i j x |> csr_i32.toDense
+
+-- ==
+-- entry: multMatVecTest
+-- input { [[1, 0], [0,1]] [2,4] }
+-- output { [2,4] }
+-- input { [[1, 0], [0,1]] [1,5] }
+-- output { [1,5] }
+
+entry multMatVecTest (m : [][]i32) (v: []i32) : []i32 =
+  csr_i32.mult_mat_vec (csr_i32.fromDense m) v
